@@ -5,7 +5,7 @@ import pandas as pd
 st.title("Sentence Tagging App")
 
 # Load the dataframe
-data = pd.read_csv("C:\Users\User\OneDrive\Documents\CreativeLanguageOutputFiles\rarest_sentences_by_dim\morph_order_by_count_2023_01_15.csv")
+data = pd.read_csv(r"C:\Users\User\OneDrive\Documents\CreativeLanguageOutputFiles\rarest_sentences_by_dim\morph_order_by_count_2023_01_15.csv")
 
 # Display the dataframe
 st.subheader("Original Dataset")
