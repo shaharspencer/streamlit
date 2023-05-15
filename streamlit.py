@@ -22,11 +22,11 @@ for index, row in tagged_data.iterrows():
     st.subheader(f"Sentence {index + 1}")
     st.write(sentence)
 
-    # Create a selectbox for tagging options
-    selected_tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
-
-    # Store the selected tag in the tagged_data dataframe
-    tagged_data.at[index, "tag"] = selected_tag
+    # # Create a selectbox for tagging options
+    # selected_tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
+    #
+    # # Store the selected tag in the tagged_data dataframe
+    # tagged_data.at[index, "tag"] = selected_tag
 
 # Display the tagged dataframe
 st.subheader("Tagged Dataset")
