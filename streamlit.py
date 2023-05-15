@@ -40,42 +40,6 @@ def tag_sentences(dataframe):
         tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
         # Perform any necessary processing or storage of the tag
 
-# Main app - Shahar section
-def shahar_page():
-    st.title("Shahar's Page")
-    st.write("Welcome to Shahar's section!")
-    # Load or generate a dataframe for Shahar
-    dataframe_shahar = pd.DataFrame({"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"]})
-    # Call the tagging function for Shahar
-    tag_sentences(dataframe_shahar)
-
-# Main app - Gabi section
-def gabi_page():
-    st.title("Gabi's Page")
-    st.write("Welcome to Gabi's section!")
-    # Load or generate a dataframe for Gabi
-    dataframe_gabi = pd.DataFrame({"sentence": ["Sentence A", "Sentence B", "Sentence C"]})
-    # Call the tagging function for Gabi
-    tag_sentences(dataframe_gabi)
-
-# Main app - Ittamar section
-def ittamar_page():
-    st.title("Ittamar's Page")
-    st.write("Welcome to Ittamar's section!")
-    # Load or generate a dataframe for Ittamar
-    dataframe_ittamar = pd.DataFrame({"sentence": ["Example 1", "Example 2", "Example 3"]})
-    # Call the tagging function for Ittamar
-    tag_sentences(dataframe_ittamar)
-
-# Main app - Nurit section
-def nurit_page():
-    st.title("Nurit's Page")
-    st.write("Welcome to Nurit's section!")
-    # Load or generate a dataframe for Nurit
-    dataframe_nurit = pd.DataFrame({"sentence": ["Text 1", "Text 2", "Text 3"]})
-    # Call the tagging function for Nurit
-    tag_sentences(dataframe_nurit)
-
 # Main app
 def main():
     st.title("Multiple User Streamlit App")
@@ -85,4 +49,30 @@ def main():
     else:
         user = st.session_state.user
 
-        # Show different pages based on
+        if user == "Shahar":
+            st.title("Shahar's Page")
+            st.write("Welcome to Shahar's section!")
+            dataframe_shahar = pd.DataFrame({"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"]})
+            tag_sentences(dataframe_shahar)
+        elif user == "Gabi":
+            st.title("Gabi's Page")
+            st.write("Welcome to Gabi's section!")
+            dataframe_gabi = pd.DataFrame({"sentence": ["Sentence A", "Sentence B", "Sentence C"]})
+            tag_sentences(dataframe_gabi)
+        elif user == "Ittamar":
+            st.title("Ittamar's Page")
+            st.write("Welcome to Ittamar's section!")
+            dataframe_ittamar = pd.DataFrame({"sentence": ["Example 1", "Example 2", "Example 3"]})
+            tag_sentences(dataframe_ittamar)
+        elif user == "Nurit":
+            st.title("Nurit's Page")
+            st.write("Welcome to Nurit's section!")
+            dataframe_nurit = pd.DataFrame({"sentence": ["Text 1", "Text 2", "Text 3"]})
+            tag_sentences(dataframe_nurit)
+
+        # Add a logout button in the sidebar
+        st.sidebar.button("Logout", on_click=logout)
+
+# Run the app
+if __name__ == '__main__':
+    main()
