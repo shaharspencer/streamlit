@@ -6,10 +6,10 @@ import base64
 st.title("Sentence Tagging App")
 
 # Load the dataframe
-data = pd.read_csv("morph_order_by_count_2023_01_15.csv")
+data = pd.read_csv("your_dataframe.csv")
 
 # Create a unique session ID for each user
-session_id = st._get_report_id()
+session_id = st.report_thread.get_report_ctx().session_id
 
 # Create a copy of the dataframe to store the tagged values
 tagged_data = data.copy()
@@ -41,7 +41,3 @@ tagged_data['tag'] = [st.session_state['user_tags'].get(f"{session_id}-{index}")
 st.dataframe(tagged_data)
 
 # Download the tagged dataset as a CSV file
-csv = tagged_data.to_csv(index=False)
-b64 = base64.b64encode(csv.encode()).decode()
-href = f'<a href="data:file/csv;base64,{b64}" download="tagged_data.csv">Download CSV</a>'
-st.markdown(href, unsafe_allow_html=True)
