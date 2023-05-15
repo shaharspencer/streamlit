@@ -6,7 +6,7 @@ import base64
 st.title("Sentence Tagging App")
 
 # Load the dataframe
-data = pd.read_csv("morph_order_by_count_2023_01_15.csv.csv")
+data = pd.read_csv("morph_order_by_count_2023_01_15.csv")
 
 # Create a unique session ID for each user
 session_id = st.session_id()
