@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Define the list of valid users
-valid_users = ["user1", "user2", "user3"]
+valid_users = ["Shahar", "Nurit", "Ittamar", "Gabi"]
 
 # User authentication
 def authenticate(username):
