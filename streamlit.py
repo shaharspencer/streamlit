@@ -14,7 +14,7 @@ def authenticate(username):
 
 # Login form
 def login():
-    username = st.selectbox("Select User", valid_users, format_func=lambda user: f"👤 {user}")
+    username = st.selectbox("Select User", valid_users, format_func=lambda user: f"👤 {user}", key=0)
     if st.button("Login"):
         if authenticate(username):
             # Store the authenticated user in session state
@@ -37,7 +37,7 @@ def tag_sentences(dataframe):
     for index, row in dataframe.iterrows():
         sentence = row["sentence"]
         st.write(f"**Sentence {index+1}:** {sentence}")
-        tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
+        tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"], key=row)
         # Perform any necessary processing or storage of the tag
 
 # Main app
