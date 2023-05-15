@@ -27,18 +27,22 @@ def login():
 
 # Logout button
 # Logout button
+# Logout button
 def logout():
     if st.button("Logout"):
         # Save changes to the dataframe if it has been modified
         if st.session_state.df_modified:
             st.session_state.df.to_csv("data.csv", index=False)
-            st.session_state.df_modified = False  # Reset the modified flag
+            st.success("Changes saved!")
+        else:
+            st.info("No changes to save.")
 
         # Clear the session state variables
         st.session_state.user = None
-        st.session_state.df = None
         st.session_state.df_modified = False
-        st.success("Logged out and changes saved!")
+        st.session_state.df = None
+        st.success("Logged out.")
+
 
 
 # Function to tag sentences
