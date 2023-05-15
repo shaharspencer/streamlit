@@ -1,18 +1,15 @@
 import streamlit as st
 import pandas as pd
-from streamlit.hashing import _CodeHasher
 import base64
 
 # Title of the web app
 st.title("Sentence Tagging App")
 
 # Load the dataframe
-data = pd.read_csv("your_dataframe.csv")
+data = pd.read_csv("morph_order_by_count_2023_01_15.csv")
 
 # Create a unique session ID for each user
 session_id = st.report_thread.get_report_ctx().session_id
-session_hash = _CodeHasher().hash(session_id)
-user_id = session_hash % (10 ** 8)
 
 # Create a copy of the dataframe to store the tagged values
 tagged_data = data.copy()
@@ -32,12 +29,15 @@ for index, row in tagged_data.iterrows():
     # Create a selectbox for tagging options
     selected_tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
 
+    # Generate a unique user ID based on session ID and index
+    user_id = f"{session_id}-{index}"
+
     # Store the selected tag in the user_tags dictionary
-    st.session_state['user_tags'][(user_id, index)] = selected_tag
+    st.session_state['user_tags'][user_id] = selected_tag
 
 # Display the tagged dataset
 st.subheader("Tagged Dataset")
-tagged_data['tag'] = [st.session_state['user_tags'].get((user_id, index)) for index in range(len(tagged_data))]
+tagged_data['tag'] = [st.session_state['user_tags'].get(f"{session_id}-{index}") for index in range(len(tagged_data))]
 st.dataframe(tagged_data)
 
 # Download the tagged dataset as a CSV file
