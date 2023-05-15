@@ -24,7 +24,7 @@ for index, row in tagged_data.iterrows():
 
     # # Create a selectbox for tagging options
     selected_tag = st.selectbox \
-        ("Select a tag", ["a", "b", "c", "d", "e"])
+        ("Select a tag", ["a", "b", "c", "d", "e"], key = 0,)
     #
     # # Store the selected tag in the tagged_data dataframe
     tagged_data.at[index, "tag"] = selected_tag
