@@ -1,33 +1,73 @@
 import streamlit as st
 import pandas as pd
 
-# Title of the web app
-st.title("Sentence Tagging App")
+# Define the list of valid users
+valid_users = ["user1", "user2", "user3"]
 
-# Load the dataframe
-data = pd.read_csv("your_dataframe.csv")
+# User authentication
+def authenticate(username):
+    # Check if the provided username is in the list of valid users
+    if username in valid_users:
+        return True
+    else:
+        return False
 
-# Display the dataframe
-st.subheader("Original Dataset")
-st.dataframe(data)
+# Login form
+def login():
+    username = st.selectbox("Select User", valid_users, format_func=lambda user: f"👤 {user}")
+    if st.button("Login"):
+        if authenticate(username):
+            # Store the authenticated user in session state
+            st.session_state.user = username
+            st.success(f"Logged in as {username}")
+        else:
+            st.error("Invalid username")
 
-# Create a copy of the dataframe to store the tagged values
-tagged_data = data.copy()
+# Logout button
+def logout():
+    if st.button("Logout"):
+        # Clear the session state user
+        st.session_state.user = None
+        st.success("Logged out")
 
-# Iterate over each row in the dataframe
-for index, row in tagged_data.iterrows():
-    sentence = row["sentence"]
+# Main app - User1 section
+def user1_page():
+    st.title("User1 Page")
+    st.write("Welcome to User1's section!")
+    # Add user-specific content for User1
 
-    # Display the sentence
-    st.subheader(f"Sentence {index + 1}")
-    st.write(sentence)
+# Main app - User2 section
+def user2_page():
+    st.title("User2 Page")
+    st.write("Welcome to User2's section!")
+    # Add user-specific content for User2
 
-    # Create a selectbox for tagging options
-    selected_tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"])
+# Main app - User3 section
+def user3_page():
+    st.title("User3 Page")
+    st.write("Welcome to User3's section!")
+    # Add user-specific content for User3
 
-    # Store the selected tag in the tagged_data dataframe
-    tagged_data.at[index, "tag"] = selected_tag
+# Main app
+def main():
+    st.title("Multiple User Streamlit App")
 
-# Display the tagged dataframe
-st.subheader("Tagged Dataset")
-st.dataframe(tagged_data)
+    if 'user' not in st.session_state or st.session_state.user is None:
+        login()
+    else:
+        user = st.session_state.user
+
+        # Show different pages based on the selected user
+        if user == "user1":
+            user1_page()
+        elif user == "user2":
+            user2_page()
+        elif user == "user3":
+            user3_page()
+
+        # Add a logout button in the sidebar
+        st.sidebar.button("Logout", on_click=logout)
+
+# Run the app
+if __name__ == '__main__':
+    main()
