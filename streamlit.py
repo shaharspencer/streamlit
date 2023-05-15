@@ -40,11 +40,8 @@ def logout():
         st.success("Logged out")
 
 
-# Function to tag sentences
-def tag_sentences():
-    st.title("Tag Sentences")
-    st.write("Tag sentences with options 'a', 'b', 'c', 'd', 'e'")
-
+# Function to render sentences and select boxes
+def render_sentences():
     # Retrieve the dataframe from session state or create a new one
     if 'df' not in st.session_state or st.session_state.df is None:
         st.session_state.df = pd.DataFrame(
@@ -78,18 +75,24 @@ def main():
         if user == "Shahar":
             st.title("Shahar's Page")
             st.write("Welcome to Shahar's section!")
-            tag_sentences()
+            render_sentences()
         elif user == "Gabi":
             st.title("Gabi's Page")
             st.write("Welcome to Gabi's section!")
-            tag_sentences()
+            render_sentences()
         elif user == "Ittamar":
             st.title("Ittamar's Page")
             st.write("Welcome to Ittamar's section!")
-            tag_sentences()
+            render_sentences()
         elif user == "Nurit":
             st.title("Nurit's Page")
             st.write("Welcome to Nurit's section!")
-            tag_sentences()
+            render_sentences()
 
-        # Add a logout button in the
+        # Add a logout button
+        logout()
+
+
+# Run the app
+if __name__ == '__main__':
+    main()
