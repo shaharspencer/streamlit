@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import threading
-import time
 
 # Define the list of valid users
 valid_users = ["Shahar", "Gabi", "Ittamar", "Nurit"]
@@ -35,7 +33,6 @@ def logout():
         st.session_state.user = None
         st.session_state.df_modified = False
         st.session_state.df = None
-        st.session_state.save_data = False
         st.success("Logged out")
 
 # Function to render sentences and select boxes
@@ -58,16 +55,12 @@ def render_sentences():
     # Save changes to the dataframe if it has been modified
     if st.session_state.df_modified:
         st.session_state.df_modified = False  # Reset the modified flag
-        st.session_state.save_data = True  # Set the save flag
 
 # Function to save the dataframe
 def save_data():
-    while True:
-        if st.session_state.save_data:
-            st.session_state.df.to_csv("tagged_sentences.csv", index=False)
-            st.success("Changes saved!")
-            st.session_state.save_data = False
-        time.sleep(1)
+    if st.button("Save"):
+        st.session_state.df.to_csv("tagged_sentences.csv", index=False)
+        st.success("Changes saved!")
 
 # Main app
 def main():
@@ -88,22 +81,56 @@ def main():
             render_sentences()
         elif user == "Ittamar":
             st.title("Ittamar's Page")
-            st.write("Welcome to Ittamar's page!")
-        # Ittamar's and Nurit's sections continue here
+            st.write("Welcome to Ittamar's section!")
             render_sentences()
         elif user == "Nurit":
             st.title("Nurit's Page")
-            st.write("Welcome to Nurit's page!")
-            # Ittamar's and Nurit's sections continue here
+            st.write("Welcome to Nurit's section!")
             render_sentences()
 
         # Add a logout button
         logout()
 
-        # Create a separate thread to save data every second
-        save_thread = threading.Thread(target=save_data)
-        save_thread.start()
+        # Add a save button
+        save_data()
+
+# Start the main app
+# Main app
+def main():
+    st.title("Multiple User Streamlit App")
+
+    if 'user' not in st.session_state or st.session_state.user is None:
+        login()
+    else:
+        user = st.session_state.user
+
+        if user == "Shahar":
+            st.title("Shahar's Page")
+            st.write("Welcome to Shahar's section!")
+            render_sentences()
+        elif user == "Gabi":
+            st.title("Gabi's Page")
+            st.write("Welcome to Gabi's section!")
+            render_sentences()
+        elif user == "Ittamar":
+            st.title("Ittamar's Page")
+            st.write("Welcome to Ittamar's section!")
+            render_sentences()
+        elif user == "Nurit":
+            st.title("Nurit's Page")
+            st.write("Welcome to Nurit's section!")
+            render_sentences()
+
+        # Add a logout button
+        logout()
+
+        # Add a save button
+        save_data()
+
+    # Create a separate thread to save data every second
+
 
 # Start the main app
 if __name__ == "__main__":
     main()
+
