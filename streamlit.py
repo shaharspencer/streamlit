@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+import base64
 # Title of the web app
 st.title("Sentence Tagging App")
 
@@ -32,3 +33,9 @@ for index, row in tagged_data.iterrows():
 # Display the tagged dataframe
 st.subheader("Tagged Dataset")
 st.dataframe(tagged_data)
+
+
+csv = tagged_data.to_csv(index=False)
+b64 = base64.b64encode(csv.encode()).decode()
+href = f'<a href="data:file/csv;base64,{b64}" download="tagged_data.csv">Download CSV</a>'
+st.markdown(href, unsafe_allow_html=True)
