@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import threading
 import time
 
 # Define the list of valid users
@@ -34,6 +35,7 @@ def logout():
         st.session_state.user = None
         st.session_state.df_modified = False
         st.session_state.df = None
+        st.session_state.save_data = False
         st.success("Logged out")
 
 # Function to render sentences and select boxes
@@ -56,12 +58,16 @@ def render_sentences():
     # Save changes to the dataframe if it has been modified
     if st.session_state.df_modified:
         st.session_state.df_modified = False  # Reset the modified flag
-        save_data()
+        st.session_state.save_data = True  # Set the save flag
 
 # Function to save the dataframe
 def save_data():
-    st.session_state.df.to_csv("tagged_sentences.csv", index=False)
-    st.success("Changes saved!")
+    while True:
+        if st.session_state.save_data:
+            st.session_state.df.to_csv("tagged_sentences.csv", index=False)
+            st.success("Changes saved!")
+            st.session_state.save_data = False
+        time.sleep(1)
 
 # Main app
 def main():
@@ -82,13 +88,22 @@ def main():
             render_sentences()
         elif user == "Ittamar":
             st.title("Ittamar's Page")
-            st.write("Welcome to Ittamar's section!")
+            st.write("Welcome to Ittamar's page!")
+        # Ittamar's and Nurit's sections continue here
             render_sentences()
         elif user == "Nurit":
             st.title("Nurit's Page")
-            st.write("Welcome to Nurit's section!")
+            st.write("Welcome to Nurit's page!")
+            # Ittamar's and Nurit's sections continue here
             render_sentences()
 
         # Add a logout button
         logout()
 
+        # Create a separate thread to save data every second
+        save_thread = threading.Thread(target=save_data)
+        save_thread.start()
+
+# Start the main app
+if __name__ == "__main__":
+    main()
