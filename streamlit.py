@@ -21,7 +21,6 @@ def login():
         if authenticate(username):
             # Store the authenticated user in session state
             st.session_state.user = username
-            st.session_state.df_modified = False  # Flag to track if dataframe is modified
             st.success(f"Logged in as {username}")
         else:
             st.error("Invalid username")
@@ -31,12 +30,13 @@ def logout():
     if st.button("Logout"):
         # Clear the session state variables
         st.session_state.user = None
-        st.session_state.df_modified = False
-        st.session_state.df = None
         st.success("Logged out")
 
-# Function to render sentences and select boxes
-def render_sentences():
+# Function to tag sentences
+def tag_sentences():
+    st.title("Tag Sentences")
+    st.write("Tag sentences with options 'a', 'b', 'c', 'd', 'e'")
+
     # Retrieve the dataframe from session state or create a new one
     if 'df' not in st.session_state or st.session_state.df is None:
         st.session_state.df = pd.DataFrame(
@@ -50,16 +50,10 @@ def render_sentences():
                            key=f"tag_selectbox_{index}")
         # Update the dataframe with the selected tag
         st.session_state.df.at[index, "tag"] = tag
-        st.session_state.df_modified = True  # Set the modified flag
 
-    # Save changes to the dataframe if it has been modified
-    if st.session_state.df_modified:
-        st.session_state.df_modified = False  # Reset the modified flag
-
-# Function to save the dataframe
-def save_data():
-    if st.button("Save"):
-        st.session_state.df.to_csv("tagged_sentences.csv", index=False)
+    # Add a save button to save changes to the dataframe
+    if st.button("Save Changes"):
+        st.session_state.df.to_csv("data.csv", index=False)
         st.success("Changes saved!")
 
 # Main app
@@ -74,63 +68,22 @@ def main():
         if user == "Shahar":
             st.title("Shahar's Page")
             st.write("Welcome to Shahar's section!")
-            render_sentences()
+            tag_sentences()
         elif user == "Gabi":
             st.title("Gabi's Page")
             st.write("Welcome to Gabi's section!")
-            render_sentences()
+            tag_sentences()
         elif user == "Ittamar":
             st.title("Ittamar's Page")
             st.write("Welcome to Ittamar's section!")
-            render_sentences()
+            tag_sentences()
         elif user == "Nurit":
             st.title("Nurit's Page")
             st.write("Welcome to Nurit's section!")
-            render_sentences()
+            tag_sentences()
 
         # Add a logout button
         logout()
 
-        # Add a save button
-        save_data()
-
-# Start the main app
-# Main app
-def main():
-    st.title("Multiple User Streamlit App")
-
-    if 'user' not in st.session_state or st.session_state.user is None:
-        login()
-    else:
-        user = st.session_state.user
-
-        if user == "Shahar":
-            st.title("Shahar's Page")
-            st.write("Welcome to Shahar's section!")
-            render_sentences()
-        elif user == "Gabi":
-            st.title("Gabi's Page")
-            st.write("Welcome to Gabi's section!")
-            render_sentences()
-        elif user == "Ittamar":
-            st.title("Ittamar's Page")
-            st.write("Welcome to Ittamar's section!")
-            render_sentences()
-        elif user == "Nurit":
-            st.title("Nurit's Page")
-            st.write("Welcome to Nurit's section!")
-            render_sentences()
-
-        # Add a logout button
-        logout()
-
-        # Add a save button
-        save_data()
-
-    # Create a separate thread to save data every second
-
-
-# Start the main app
 if __name__ == "__main__":
     main()
-
