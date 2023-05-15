@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
-
+import time
 
 # Define the list of valid users
 valid_users = ["Shahar", "Gabi", "Ittamar", "Nurit"]
-
 
 # User authentication
 def authenticate(username):
@@ -13,7 +12,6 @@ def authenticate(username):
         return True
     else:
         return False
-
 
 # Login form
 def login():
@@ -29,7 +27,6 @@ def login():
         else:
             st.error("Invalid username")
 
-
 # Logout button
 def logout():
     if st.button("Logout"):
@@ -38,7 +35,6 @@ def logout():
         st.session_state.df_modified = False
         st.session_state.df = None
         st.success("Logged out")
-
 
 # Function to render sentences and select boxes
 def render_sentences():
@@ -60,8 +56,12 @@ def render_sentences():
     # Save changes to the dataframe if it has been modified
     if st.session_state.df_modified:
         st.session_state.df_modified = False  # Reset the modified flag
-        st.success("Changes saved!")
+        save_data()
 
+# Function to save the dataframe
+def save_data():
+    st.session_state.df.to_csv("tagged_sentences.csv", index=False)
+    st.success("Changes saved!")
 
 # Main app
 def main():
@@ -91,7 +91,6 @@ def main():
 
         # Add a logout button
         logout()
-
 
 # Run the app
 if __name__ == '__main__':
