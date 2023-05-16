@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+
 def main():
     # Create sidebar with two sections
     st.sidebar.title("Annotation App")
@@ -17,7 +18,7 @@ def main():
 
 def show_annotation_page(user):
     # Read the data file
-    data_file = "your_dataframe.csv"
+    data_file = "my_dataset.csv"
     data = pd.read_csv(data_file)
 
     # Get or create the annotation data for the selected user
@@ -26,7 +27,7 @@ def show_annotation_page(user):
         st.session_state.annotation_data = {}
 
     if annotation_file not in st.session_state.annotation_data:
-        annotation_data = pd.DataFrame(columns=["Sentence", "Annotation"])
+        annotation_data = pd.DataFrame(columns=["User", "Sentence", "Annotation"])
         st.session_state.annotation_data[annotation_file] = annotation_data
     else:
         annotation_data = st.session_state.annotation_data[annotation_file]
@@ -37,18 +38,18 @@ def show_annotation_page(user):
         st.write(f"**Sentence:** {sentence}")
 
         # Get the annotation for the current sentence, if available
-        annotation_row = annotation_data.loc[annotation_data["Sentence"] == sentence]
+        annotation_row = annotation_data.loc[(annotation_data["User"] == user) & (annotation_data["Sentence"] == sentence)]
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=0 if selected_option is None else selected_option,
+        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option,
                                        key=f"{user}_{index}")
 
         # Update the annotation in the session state
         if not annotation_row.empty:
             annotation_data.loc[annotation_row.index, "Annotation"] = selected_option
         else:
-            annotation_data = annotation_data.append({"Sentence": sentence, "Annotation": selected_option},
+            annotation_data = annotation_data.append({"User": user, "Sentence": sentence, "Annotation": selected_option},
                                                      ignore_index=True)
 
         # Update the session state with the updated annotation data
