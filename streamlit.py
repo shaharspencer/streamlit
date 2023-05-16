@@ -37,10 +37,9 @@ def show_annotation_page(user):
     # Iterate over the dataframe and allow users to tag sentences
     for index, row in st.session_state.df.iterrows():
         sentence = row["sentence"]
-        st.write(f"**Sentence {index + 1}:** {sentence}")
         selected_option = get_selected_option(annotation_data, sentence)
-        tag = st.selectbox(label="Select a tag", options=["", "a", "b", "c", "d", "e"],
-
+        tag = st.selectbox("Select a tag", ["", "a", "b", "c", "d", "e"],
+                           index=selected_option,
                            key=f"tag_selectbox_{user}_{index}")
         # Update the annotation data for the current user
         update_annotation_data(annotation_data, sentence, tag)
