@@ -37,23 +37,26 @@ def tag_sentences():
     st.title("Tag Sentences")
     st.write("Tag sentences with options 'a', 'b', 'c', 'd', 'e'")
 
-    # Retrieve the dataframe from session state or create a new one
-    if 'df' not in st.session_state or st.session_state.df is None:
-        st.session_state.df = pd.DataFrame(
+    # Retrieve the annotation data for the current user or create a new one
+    user_annotation_file = f"{st.session_state.user}_annotation.csv"
+    if user_annotation_file not in st.session_state:
+        st.session_state[user_annotation_file] = pd.DataFrame(
             {"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"]})
 
-    # Iterate over the dataframe and allow users to tag sentences
-    for index, row in st.session_state.df.iterrows():
+    annotation_data = st.session_state[user_annotation_file]
+
+    # Iterate over the annotation data and allow the user to tag sentences
+    for index, row in annotation_data.iterrows():
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
         tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
                            key=f"tag_selectbox_{index}")
-        # Update the dataframe with the selected tag
-        st.session_state.df.at[index, "tag"] = tag
+        # Update the annotation data with the selected tag
+        annotation_data.at[index, "tag"] = tag
 
-    # Add a save button to save changes to the dataframe
+    # Add a save button to save changes to the annotation data
     if st.button("Save Changes"):
-        st.session_state.df.to_csv("data.csv", index=False)
+        annotation_data.to_csv(user_annotation_file, index=False)
         st.success("Changes saved!")
 
 # Main app
