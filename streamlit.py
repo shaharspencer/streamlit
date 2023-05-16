@@ -57,12 +57,8 @@ def tag_sentences(user):
         # Update the dataframe with the selected tag
         user_df.at[index, "tag"] = tag
 
-    # Add a save button to save changes to the user's dataframe
-    if st.button("Save Changes"):
-        # Save the user's dataframe to a file
-        user_annotation_file = f"{user}_annotation.csv"
-        user_df.to_csv(user_annotation_file, index=False)
-        st.success("Changes saved!")
+
+
 
 # Main app
 def main():
