@@ -41,20 +41,22 @@ def tag_sentences():
     # Retrieve the dataframe from session state or create a new one
     if 'df' not in st.session_state or st.session_state.df is None:
         st.session_state.df = pd.DataFrame(
-            {"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"], "tag": ["", "", ""]})
+            {"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"], "tag": [""] * 3})
 
     # Iterate over the dataframe and allow users to tag sentences
     for index, row in st.session_state.df.iterrows():
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
-        tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
-                           key=f"tag_selectbox_{index}", index=ord(row["tag"])-ord("a"))
+        tag = st.selectbox(f"Select a tag for Sentence {index + 1}", ["", "a", "b", "c", "d", "e"],
+                           key=f"tag_selectbox_{index}", index=ord(row["tag"])-ord("a")+1 if row["tag"] else 0)
         # Update the dataframe with the selected tag
         st.session_state.df.at[index, "tag"] = tag
 
     # Add a save button to save changes to the dataframe
     if st.button("Save Changes"):
-        st.session_state.df.to_csv(f"data_{st.session_state.user}.csv", index=False)
+        # Save the dataframe to the annotation file for the current user
+        user_annotation_file = f"{st.session_state.user}_annotation.csv"
+        st.session_state.df.to_csv(user_annotation_file, index=False)
         st.success("Changes saved!")
 
 # Main app
@@ -86,5 +88,5 @@ def main():
         # Add a logout button
         logout()
 
-if __name__ == "__main__":
+if __name__ == "main":
     main()
