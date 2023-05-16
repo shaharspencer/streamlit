@@ -26,24 +26,11 @@ def login():
             st.error("Invalid username")
 
 # Logout button
-# Logout button
-# Logout button
 def logout():
     if st.button("Logout"):
-        # Save changes to the dataframe if it has been modified
-        if st.session_state.df_modified:
-            st.session_state.df.to_csv("data.csv", index=False)
-            st.success("Changes saved!")
-        else:
-            st.info("No changes to save.")
-
         # Clear the session state variables
         st.session_state.user = None
-        st.session_state.df_modified = False
-        st.session_state.df = None
-        st.success("Logged out.")
-
-
+        st.success("Logged out")
 
 # Function to tag sentences
 def tag_sentences():
