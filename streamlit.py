@@ -1,77 +1,38 @@
 import streamlit as st
 import pandas as pd
 
-# Define the list of valid users
-valid_users = ["Shahar", "Gabi", "Ittamar", "Nurit"]
+# Load data from CSV file
+data = pd.read_csv("your_dataframe.csv")
 
-# User authentication
-def authenticate(username):
-    # Check if the provided username is in the list of valid users
-    if username in valid_users:
-        return True
-    else:
-        return False
+# Define a function to save annotations
+def save_annotations(user, annotations):
+    file_name = f"{user}_annotations.csv"
+    annotations.to_csv(file_name, index=False)
 
-# Login form
-def login():
-    username = st.selectbox("Select User", valid_users,
-                            format_func=lambda user: f"👤 {user}",
-                            key="login_selectbox")
-    if st.button("Login"):
-        if authenticate(username):
-            # Store the authenticated user in session state
-            st.session_state.user = username
-            st.success(f"Logged in as {username}")
-        else:
-            st.error("Invalid username")
+# Define a function to load annotations
+def load_annotations(user):
+    file_name = f"{user}_annotations.csv"
+    try:
+        annotations = pd.read_csv(file_name)
+    except FileNotFoundError:
+        annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
+    merged = pd.merge(data, annotations, on="Sentence", how="outer")
+    merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
+    return merged
 
-# Logout button
-def logout():
-    if st.button("Logout"):
-        # Clear the session state variables
-        st.session_state.user = None
-        st.success("Logged out")
+# Get user name
+user = st.text_input("Enter your name")
 
-# Function to tag sentences
-def tag_sentences(user):
-    st.title(f"{user}'s Annotation Page")
-    st.write("Tag sentences with options 'a', 'b', 'c', 'd', 'e'")
+# Load user's annotations
+user_annotations = load_annotations(user)
 
-    # Read the user's dataframe from a CSV file
-    user_dataframe_file = "your_dataframe.csv"
-    user_df = pd.read_csv(user_dataframe_file)
+# Display user's annotations
+for index, row in user_annotations.iterrows():
+    st.write(row["Sentence"])
+    annotation = st.selectbox("Annotation", choices=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
+    user_annotations.at[index, "Annotation"] = annotation
 
-    # Iterate over the dataframe and allow the user to tag sentences
-    for index, row in user_df.iterrows():
-        sentence = row["Sentence"]
-        st.write(f"**Sentence {index + 1}:** {sentence}")
-        tag = st.selectbox(f"Select a tag for Sentence {index + 1}", ["", "a", "b", "c", "d", "e"],
-                           key=f"{user}_tag_selectbox_{index}", index=row["Tag"])
-        # Update the dataframe with the selected tag
-        user_df.at[index, "Tag"] = tag
+    # Save user's annotations when changes are made
+    save_annotations(user, user_annotations)
 
-    # Add a save button to save changes to the user's dataframe
-    if st.button("Save Changes"):
-        # Save the updated dataframe to the CSV file
-        user_df.to_csv(user_dataframe_file, index=False)
-        st.success("Changes saved!")
-
-# Main app
-def main():
-    st.title("Multiple User Streamlit App")
-
-    if 'user' not in st.session_state or st.session_state.user is None:
-        login()
-    else:
-        user = st.session_state.user
-
-        if user in valid_users:
-            tag_sentences(user)
-        else:
-            st.error("Invalid user")
-
-        # Add a logout button
-        logout()
-
-if __name__ == "__main__":
-    main()
+st.write("Changes saved automatically")
