@@ -42,10 +42,10 @@ def show_annotation_page(user):
 
         # Create a choice selection for each row
         options = ["a", "b", "c", "d"]
-        selected_option_index = options.index(selected_option) if selected_option is not None else None
+        # selected_option_index = options.index(selected_option) if selected_option is not None else None
 
-        selected_option_index = st.selectbox("Choose an option", options=options,
-                                             index=selected_option_index, key=f"{user}_{index}")
+        selected_option_index = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
+                           key=f"tag_selectbox_{index}")
 
         selected_option = options[selected_option_index]
 
