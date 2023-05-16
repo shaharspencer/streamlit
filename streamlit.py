@@ -25,7 +25,7 @@ def show_annotation_page(user):
     if 'annotation_data' not in st.session_state:
         st.session_state.annotation_data = {}
     if user not in st.session_state.annotation_data:
-        annotation_data = {}
+        annotation_data = [""] * len(st.session_state.df)
         st.session_state.annotation_data[user] = annotation_data
     else:
         annotation_data = st.session_state.annotation_data[user]
@@ -34,7 +34,7 @@ def show_annotation_page(user):
     for index, row in st.session_state.df.iterrows():
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
-        tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
+        tag = st.selectbox("Select a tag", ["", "a", "b", "c", "d", "e"],
                            key=f"tag_selectbox_{user}_{index}",
                            index=get_current_tag_index(annotation_data, index))
         # Update the annotation data for the current user
@@ -45,10 +45,9 @@ def show_annotation_page(user):
 
 
 def get_current_tag_index(annotation_data, index):
-    if index in annotation_data:
-        tag = annotation_data[index]
-        if tag in ["a", "b", "c", "d", "e"]:
-            return ["a", "b", "c", "d", "e"].index(tag)
+    tag = annotation_data[index]
+    if tag in ["", "a", "b", "c", "d", "e"]:
+        return ["", "a", "b", "c", "d", "e"].index(tag)
     return 0
 
 
