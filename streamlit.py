@@ -31,7 +31,7 @@ def main():
     # Display user's annotations
     for index, row in user_annotations.iterrows():
         st.write(row["Sentence"])
-        annotation = st.selectbox("Annotation", choices=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
+        annotation = st.selectbox("Annotation",options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
         user_annotations.at[index, "Annotation"] = annotation
 
         # Save user's annotations when changes are made
