@@ -33,33 +33,20 @@ def show_annotation_page(user):
 
     # Display annotation page for each row in the data file
     for index, row in data.iterrows():
-        sentence = row["Sentence"]
-        st.write(f"**Sentence:** {sentence}")
 
-        # Get the annotation for the current sentence, if available
-        annotation_row = annotation_data.loc[annotation_data["Sentence"] == sentence]
-        selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
-        # Create a choice selection for each row
-        options = ["a", "b", "c", "d"]
-        # selected_option_index = options.index(selected_option) if selected_option is not None else None
+        for index, row in st.session_state.df.iterrows():
+            sentence = row["sentence"]
+            st.write(f"**Sentence {index + 1}:** {sentence}")
+            tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
+                               key=f"tag_selectbox_{index}")
+            # Update the dataframe with the selected tag
+            st.session_state.df.at[index, "tag"] = tag
 
-        selected_option_index = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
-                           key=f"tag_selectbox_{index}")
-
-        selected_option = options[selected_option_index]
-
-        # Update the annotation in the session state
-        if not annotation_row.empty:
-            annotation_data.loc[annotation_row.index, "Annotation"] = selected_option
-        else:
-            annotation_data = annotation_data.append({"Sentence": sentence, "Annotation": selected_option},
-                                                     ignore_index=True)
-
-        # Update the session state with the updated annotation data
-        st.session_state.annotation_data[annotation_file] = annotation_data
-
-        st.write("---")  # Add a separator between rows
+        # # Update the session state with the updated annotation data
+        # st.session_state.annotation_data[annotation_file] = annotation_data
+        #
+        # st.write("---")  # Add a separator between rows
 
 
 if __name__ == "__main__":
