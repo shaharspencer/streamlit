@@ -39,7 +39,7 @@ def show_annotation_page(user):
 
         # Get the annotation for the current sentence, if available
         annotation_row = annotation_data.loc[annotation_data["Sentence"] == sentence]
-        selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
+        selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else "a"
 
         # Create a choice selection for each row
         selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option,
