@@ -41,7 +41,7 @@ def show_annotation_page(user):
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option,
+        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=0 if selected_option is None else selected_option,
                                        key=f"{user}_{index}")
 
         # Update the annotation in the session state
