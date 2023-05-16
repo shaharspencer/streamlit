@@ -39,8 +39,8 @@ def show_annotation_page(user):
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
         selected_option = get_selected_option(annotation_data, sentence)
-        tag = st.selectbox("Select a tag", ["", "a", "b", "c", "d", "e"],
-                           index=selected_option,
+        tag = st.selectbox(label="Select a tag", options=["", "a", "b", "c", "d", "e"],
+
                            key=f"tag_selectbox_{user}_{index}")
         # Update the annotation data for the current user
         update_annotation_data(annotation_data, sentence, tag)
