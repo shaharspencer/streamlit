@@ -23,10 +23,12 @@ def show_annotation_page(user):
 
     # Get or create the annotation data for the selected user
     annotation_file = f"{user}_annotation.csv"
-    if st.session_state.get(annotation_file) is None:
-        st.session_state[annotation_file] = pd.DataFrame(columns=["Sentence", "Annotation"])
+    if "annotation_data" not in st.session_state:
+        st.session_state.annotation_data = {}
+    if annotation_file not in st.session_state.annotation_data:
+        st.session_state.annotation_data[annotation_file] = pd.DataFrame(columns=["Sentence", "Annotation"])
 
-    annotation_data = st.session_state[annotation_file]
+    annotation_data = st.session_state.annotation_data[annotation_file]
 
     # Display annotation page for each row in the data file
     for index, row in data.iterrows():
@@ -48,7 +50,7 @@ def show_annotation_page(user):
                                                      ignore_index=True)
 
         # Update the session state with the updated annotation data
-        st.session_state[annotation_file] = annotation_data
+        st.session_state.annotation_data[annotation_file] = annotation_data
 
         st.write("---")  # Add a separator between rows
 
