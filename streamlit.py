@@ -32,7 +32,13 @@ def show_annotation_page():
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option)
+        selected_option_index = 0
+        if selected_option is not None:
+            selected_option_index = ["a", "b", "c", "d"].index(selected_option)
+
+        selected_option_index = st.selectbox("Choose an option", options=[0, 1, 2, 3], index=selected_option_index)
+
+        selected_option = ["a", "b", "c", "d"][selected_option_index]
 
         # Perform annotation task here (e.g., save selected_option to a database)
 
