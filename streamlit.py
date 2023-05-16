@@ -37,28 +37,24 @@ def tag_sentences(user):
     st.title(f"{user}'s Annotation Page")
     st.write("Tag sentences with options 'a', 'b', 'c', 'd', 'e'")
 
-    # Retrieve the user's dataframe from session state or create a new one
-    user_df_key = f"{user}_df"
-    if user_df_key not in st.session_state or st.session_state[user_df_key] is None:
-        st.session_state[user_df_key] = pd.DataFrame(
-            {"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"], "tag": [""] * 3})
-
-    # Get the user's dataframe
-    user_df = st.session_state[user_df_key]
+    # Read the user's dataframe from a CSV file
+    user_dataframe_file = "your_dataframe.csv"
+    user_df = pd.read_csv(user_dataframe_file)
 
     # Iterate over the dataframe and allow the user to tag sentences
     for index, row in user_df.iterrows():
-        options = ["", "a", "b", "c", "d", "e"]
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
-        default_index = options.index(row["tag"])
-        tag = st.selectbox(label =f"Select a tag for Sentence {index + 1}", options=["", "a", "b", "c", "d", "e"],
-                           key=f"{user}_tag_selectbox_{index}", index=default_index)
+        tag = st.selectbox(f"Select a tag for Sentence {index + 1}", ["", "a", "b", "c", "d", "e"],
+                           key=f"{user}_tag_selectbox_{index}", index=row["tag"])
         # Update the dataframe with the selected tag
         user_df.at[index, "tag"] = tag
 
-
-
+    # Add a save button to save changes to the user's dataframe
+    if st.button("Save Changes"):
+        # Save the updated dataframe to the CSV file
+        user_df.to_csv(user_dataframe_file, index=False)
+        st.success("Changes saved!")
 
 # Main app
 def main():
