@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-
 def main():
     # Create sidebar with two sections
     st.sidebar.title("Annotation App")
@@ -42,14 +41,13 @@ def show_annotation_page(user):
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option_index = None
-        if selected_option is not None:
-            selected_option_index = ["a", "b", "c", "d"].index(selected_option)
+        options = ["a", "b", "c", "d"]
+        selected_option_index = options.index(selected_option) if selected_option is not None else None
 
-        selected_option_index = st.selectbox("Choose an option", options=["a", "b", "c", "d"],
+        selected_option_index = st.selectbox("Choose an option", options=options,
                                              index=selected_option_index, key=f"{user}_{index}")
 
-        selected_option = ["a", "b", "c", "d"][selected_option_index]
+        selected_option = options[selected_option_index]
 
         # Update the annotation in the session state
         if not annotation_row.empty:
