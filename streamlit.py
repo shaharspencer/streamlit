@@ -6,7 +6,7 @@ def main():
     st.sidebar.title("Annotation App")
     st.sidebar.header("Annotation Pages")
     user_list = ["User 1", "User 2", "User 3"]  # List of users
-    selected_user = st.sidebar.selectbox("Select user", user_list, key=0)
+    selected_user = st.sidebar.selectbox("Select user", user_list)
 
     annotation_button = st.sidebar.button("Open Annotation Page")
 
@@ -16,19 +16,20 @@ def main():
 
 
 def show_annotation_page(user):
-    # Sample data
-    data = pd.DataFrame({
-        "Sentence": ["This is sentence 1", "This is sentence 2", "This is sentence 3"],
-    })
+    # Read the data file
+    data_file = "my_dataset.csv"
+    data = pd.read_csv(data_file)
 
     # Get or create the annotation data for the selected user
     annotation_file = f"{user}_annotation.csv"
     if "annotation_data" not in st.session_state:
         st.session_state.annotation_data = {}
-    if annotation_file not in st.session_state.annotation_data:
-        st.session_state.annotation_data[annotation_file] = pd.DataFrame(columns=["Sentence", "Annotation"])
 
-    annotation_data = st.session_state.annotation_data[annotation_file]
+    if annotation_file not in st.session_state.annotation_data:
+        annotation_data = pd.DataFrame(columns=["Sentence", "Annotation"])
+        st.session_state.annotation_data[annotation_file] = annotation_data
+    else:
+        annotation_data = st.session_state.annotation_data[annotation_file]
 
     # Display annotation page for each row in the data file
     for index, row in data.iterrows():
@@ -41,7 +42,7 @@ def show_annotation_page(user):
 
         # Create a choice selection for each row
         selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option,
-                                       key=row)
+                                       key=f"{user}_{index}")
 
         # Update the annotation in the session state
         if not annotation_row.empty:
