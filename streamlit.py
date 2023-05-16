@@ -4,23 +4,29 @@ import pandas as pd
 def main():
     # Create sidebar with two sections
     st.sidebar.title("Annotation App")
-    st.sidebar.header("Annotation Page")
+    st.sidebar.header("Annotation Pages")
+    user_list = ["User 1", "User 2", "User 3"]  # List of users
+    selected_user = st.sidebar.selectbox("Select user", user_list)
+
     annotation_button = st.sidebar.button("Open Annotation Page")
 
     if annotation_button:
         # Display annotation page
-        show_annotation_page()
+        show_annotation_page(selected_user)
 
 
-def show_annotation_page():
-    # Sample data and annotations
+def show_annotation_page(user):
+    # Sample data
     data = pd.DataFrame({
         "Sentence": ["This is sentence 1", "This is sentence 2", "This is sentence 3"],
     })
-    annotations = pd.DataFrame({
-        "Sentence": ["This is sentence 1", "This is sentence 2", "This is sentence 3"],
-        "Annotation": ["a", "b", "c"],
-    })
+
+    # Get or create the annotation data for the selected user
+    annotation_file = f"{user}_annotation.csv"
+    if st.session_state.get(annotation_file) is None:
+        st.session_state[annotation_file] = pd.DataFrame(columns=["Sentence", "Annotation"])
+
+    annotation_data = st.session_state[annotation_file]
 
     # Display annotation page for each row in the data file
     for index, row in data.iterrows():
@@ -28,19 +34,21 @@ def show_annotation_page():
         st.write(f"**Sentence:** {sentence}")
 
         # Get the annotation for the current sentence, if available
-        annotation_row = annotations.loc[annotations["Sentence"] == sentence]
+        annotation_row = annotation_data.loc[annotation_data["Sentence"] == sentence]
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option_index = 0
-        if selected_option is not None:
-            selected_option_index = ["a", "b", "c", "d"].index(selected_option)
+        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option)
 
-        selected_option_index = st.selectbox("Choose an option", options=[0, 1, 2, 3], index=selected_option_index)
+        # Update the annotation in the session state
+        if not annotation_row.empty:
+            annotation_data.loc[annotation_row.index, "Annotation"] = selected_option
+        else:
+            annotation_data = annotation_data.append({"Sentence": sentence, "Annotation": selected_option},
+                                                     ignore_index=True)
 
-        selected_option = ["a", "b", "c", "d"][selected_option_index]
-
-        # Perform annotation task here (e.g., save selected_option to a database)
+        # Update the session state with the updated annotation data
+        st.session_state[annotation_file] = annotation_data
 
         st.write("---")  # Add a separator between rows
 
