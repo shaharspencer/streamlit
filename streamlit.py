@@ -12,8 +12,7 @@ def main():
 
     if annotation_button:
         # Display annotation page
-        with st.spinner():
-            show_annotation_page(selected_user)
+        show_annotation_page(selected_user)
 
 
 def show_annotation_page(user):
@@ -22,30 +21,35 @@ def show_annotation_page(user):
         st.session_state.df = pd.DataFrame(
             {"sentence": ["Sentence 1", "Sentence 2", "Sentence 3"]})
 
+    # Get or create the annotation data for the selected user
+    if 'annotation_data' not in st.session_state:
+        st.session_state.annotation_data = {}
+    if user not in st.session_state.annotation_data:
+        annotation_data = {}
+        st.session_state.annotation_data[user] = annotation_data
+    else:
+        annotation_data = st.session_state.annotation_data[user]
+
     # Iterate over the dataframe and allow users to tag sentences
     for index, row in st.session_state.df.iterrows():
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
         tag = st.selectbox("Select a tag", ["a", "b", "c", "d", "e"],
-                           key=f"tag_selectbox_{index}",
-                           index=get_current_tag_index(user, index))
-        # Update the dataframe with the selected tag
-        st.session_state.df.at[index, get_user_column(user)] = tag
+                           key=f"tag_selectbox_{user}_{index}",
+                           index=get_current_tag_index(annotation_data, index))
+        # Update the annotation data for the current user
+        annotation_data[index] = tag
 
-    # Display annotation page for each row in the data file
+    # Update the session state with the updated annotation data
+    st.session_state.annotation_data[user] = annotation_data
 
 
-def get_current_tag_index(user, index):
-    column = get_user_column(user)
-    if column in st.session_state.df.columns:
-        tag = st.session_state.df.at[index, column]
+def get_current_tag_index(annotation_data, index):
+    if index in annotation_data:
+        tag = annotation_data[index]
         if tag in ["a", "b", "c", "d", "e"]:
             return ["a", "b", "c", "d", "e"].index(tag)
     return 0
-
-
-def get_user_column(user):
-    return f"{user}_tag"
 
 
 if __name__ == "__main__":
