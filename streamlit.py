@@ -48,10 +48,12 @@ def tag_sentences(user):
 
     # Iterate over the dataframe and allow the user to tag sentences
     for index, row in user_df.iterrows():
+        options = ["", "a", "b", "c", "d", "e"]
         sentence = row["sentence"]
         st.write(f"**Sentence {index + 1}:** {sentence}")
-        tag = st.selectbox(f"Select a tag for Sentence {index + 1}", ["", "a", "b", "c", "d", "e"],
-                           key=f"{user}_tag_selectbox_{index}", index=row["tag"])
+        default_index = options.index(row["tag"])
+        tag = st.selectbox(label =f"Select a tag for Sentence {index + 1}", options=["", "a", "b", "c", "d", "e"],
+                           key=f"{user}_tag_selectbox_{index}", index=default_index)
         # Update the dataframe with the selected tag
         user_df.at[index, "tag"] = tag
 
