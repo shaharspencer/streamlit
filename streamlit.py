@@ -6,7 +6,7 @@ def main():
     st.sidebar.title("Annotation App")
     st.sidebar.header("Annotation Pages")
     user_list = ["User 1", "User 2", "User 3"]  # List of users
-    selected_user = st.sidebar.selectbox("Select user", user_list)
+    selected_user = st.sidebar.selectbox("Select user", user_list, key=0)
 
     annotation_button = st.sidebar.button("Open Annotation Page")
 
@@ -40,7 +40,8 @@ def show_annotation_page(user):
         selected_option = annotation_row["Annotation"].values[0] if not annotation_row.empty else None
 
         # Create a choice selection for each row
-        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option)
+        selected_option = st.selectbox("Choose an option", options=["a", "b", "c", "d"], index=selected_option,
+                                       key=row)
 
         # Update the annotation in the session state
         if not annotation_row.empty:
