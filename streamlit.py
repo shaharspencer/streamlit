@@ -18,17 +18,14 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Annotation", "Free Text"])
+        annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
 
     if "Annotation" not in annotations.columns:
         annotations["Annotation"] = "a"  # Set default annotation to "a"
-    if "Free Text" not in annotations.columns:
-        annotations["Free Text"] = ""  # Set default free text to empty string
 
-    merged = pd.merge(data, annotations[["Sentence", "Annotation", "Free Text"]],
+    merged = pd.merge(data, annotations[["Sentence", "Annotation"]],
                       on="Sentence", how="outer")
     merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
-    merged["Free Text"].fillna("", inplace=True)  # Set default free text to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
 
@@ -66,9 +63,6 @@ def main():
                                       key=f"{user}_tag_selectbox_{index}",
                                       index=ord(row["Annotation"]) - ord("a"))
             user_annotations.at[index, "Annotation"] = annotation
-            free_text = st.text_input("Free Text", value=row["Free Text"])
-            user_annotations.at[index, "Free Text"] = free_text
-
             # Save user's annotations for each selection
             save_annotations(user, user_annotations)
 
@@ -86,4 +80,9 @@ def main():
             annotations["Annotator"] = u  # Add "Annotator" column with the annotator's name
             all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
 
-        st.subheader
+        st.subheader("All Annotations")
+        st.dataframe(all_annotations)
+
+
+if __name__ == "__main__":
+    main()
