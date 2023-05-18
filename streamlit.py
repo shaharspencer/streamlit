@@ -78,6 +78,7 @@ def main():
         for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             if u != user:  # Exclude the current user's annotations
                 annotations = load_annotations(u)
+                annotations["Annotator"] = u  # Add "Annotator" column with the annotator's name
                 all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
 
         st.subheader("All Annotations")
