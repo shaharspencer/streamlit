@@ -45,7 +45,7 @@ def main():
         st.header("View All Annotations")
         for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             annotations = load_annotations(user)
-            st.subheader(user)
+            st.subheader(f"{user}'s Annotations")
             st.dataframe(annotations)
 
     # User Annotations page
@@ -58,7 +58,7 @@ def main():
     user_annotations = load_annotations(user)
 
     # Display user's annotations
-    st.header("User Annotations")
+    st.header(f"{user}'s Annotations")
     for index, row in user_annotations.iterrows():
         st.write(row["Sentence"])
         annotation = st.selectbox("Annotation", options=["a", "b", "c"],
