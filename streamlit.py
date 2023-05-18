@@ -18,7 +18,7 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Annotation", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension"])
 
     if "Annotation" not in annotations.columns:
         annotations["Annotation"] = ""  # Set default annotation to ""
