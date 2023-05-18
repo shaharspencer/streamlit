@@ -20,16 +20,16 @@ def load_annotations(user):
     except FileNotFoundError:
         annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension"])
 
-    if "Annotation" not in annotations.columns:
-        annotations["Annotation"] = ""  # Set default annotation to ""
+    if "Tag according to dimension" not in annotations.columns:
+        annotations["Tag according to dimension"] = ""  # Set default annotation to ""
 
-    if "Notes" not in annotations.columns:
-        annotations["Notes"] = ""  # Add empty "Notes" column if not present
+    if "Notes on relevant dimension" not in annotations.columns:
+        annotations["Notes on relevant dimension"] = ""  # Add empty "Notes on relevant dimension" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Annotation", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension"]],
                       on="Sentence", how="outer")
-    merged["Annotation"].fillna("", inplace=True)  # Set default annotation to ""
-    merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
+    merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
+    merged["Notes on relevant dimension"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
 
@@ -76,7 +76,7 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             st.write(row["Sentence"])
-            annotation = st.selectbox("Annotation", options=[
+            annotation = st.selectbox("Tag according to dimension", options=[
                 "ordinary",
                 "creative",
                 "spelling variant",
@@ -85,10 +85,10 @@ def main():
                 "algorithm error",
                 "not English"
             ], key=f"{user}_tag_selectbox_{index}")
-            user_annotations.at[index, "Annotation"] = annotation
+            user_annotations.at[index, "Tag according to dimension"] = annotation
 
-            notes = st.text_area("Notes", value=row["Notes"], key=f"{user}_notes_{index}")
-            user_annotations.at[index, "Notes"] = notes
+            notes = st.text_area("Notes on relevant dimension", value=row["Notes on relevant dimension"], key=f"{user}_notes_{index}")
+            user_annotations.at[index, "Notes on relevant dimension"] = notes
 
             # Save user's annotations for each selection
             save_annotations(user, user_annotations)
