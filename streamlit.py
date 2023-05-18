@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv")
@@ -16,9 +17,17 @@ def load_annotations(user):
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
         annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
-    merged = pd.merge(data, annotations, on="Sentence", how="outer")
+    merged = pd.merge(data, annotations, on="Sentence", how="outer", suffixes=("", "_y"))
     merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
+    merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
+
+# Define a function to download the dataframe as a CSV file
+def download_dataframe(dataframe):
+    csv = dataframe.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="user_annotations.csv">Download CSV</a>'
+    return href
 
 # Main app
 def main():
@@ -31,13 +40,16 @@ def main():
     # Display user's annotations
     for index, row in user_annotations.iterrows():
         st.write(row["Sentence"])
-        annotation = st.selectbox("Annotation",options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
+        annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
         user_annotations.at[index, "Annotation"] = annotation
 
-        # Save user's annotations when changes are made
-        save_annotations(user, user_annotations)
+    # Save user's annotations when changes are made
+    save_annotations(user, user_annotations)
 
     st.write("Changes saved automatically")
+
+    # Add download button for the user's dataframe
+    st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
