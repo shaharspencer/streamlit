@@ -19,19 +19,18 @@ def load_annotations(user):
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
         annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
-    merged = pd.merge(data, annotations[["Sentence", "Annotation"]],
-                      on="Sentence", how="outer")
+    merged = pd.merge(data, annotations, on="Sentence", how="outer")
     merged["Annotation"].fillna("a",
                                 inplace=True)  # Set default annotation to "a"
-    merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
 
 
-# Define a function to download the dataframe as a CSV file
-def download_dataframe(dataframe):
+# Define a function to download the dataframe as a CSV file with the user's name
+def download_dataframe(dataframe, user):
+    file_name = f"{user}_annotations.csv"
     csv = dataframe.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="user_annotations.csv">Download CSV</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV</a>'
     return href
 
 
@@ -71,7 +70,8 @@ def main():
     st.write("Changes saved automatically")
 
     # Add download button for the user's dataframe
-    st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+    st.markdown(download_dataframe(user_annotations, user),
+                unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
