@@ -31,32 +31,37 @@ def download_dataframe(dataframe):
 
 # Main app
 def main():
-    # Get user name
-    user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+    # Sidebar menu
+    menu = st.sidebar.selectbox("Menu", ["User Annotations", "View Annotations"])
 
-    # Load user's annotations
-    user_annotations = load_annotations(user)
+    if menu == "User Annotations":
+        # Get user name
+        user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
-    # Display user's annotations
-    st.header("User Annotations")
-    for index, row in user_annotations.iterrows():
-        st.write(row["Sentence"])
-        annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
-        user_annotations.at[index, "Annotation"] = annotation
-        # Save user's annotations for each selection
-        save_annotations(user, user_annotations)
+        # Load user's annotations
+        user_annotations = load_annotations(user)
 
-    st.write("Changes saved automatically")
+        # Display user's annotations
+        st.header("User Annotations")
+        for index, row in user_annotations.iterrows():
+            st.write(row["Sentence"])
+            annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
+            user_annotations.at[index, "Annotation"] = annotation
+            # Save user's annotations for each selection
+            save_annotations(user, user_annotations)
 
-    # Add download button for the user's dataframe
-    st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+        st.write("Changes saved automatically")
 
-    # View Annotations section
-    st.header("View Annotations")
-    for user in ["Nurit", "Ittamar", "Gabi", "Shahar"]:
-        annotations = load_annotations(user)
-        st.subheader(user)
-        st.dataframe(annotations)
+        # Add download button for the user's dataframe
+        st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+
+    elif menu == "View Annotations":
+        # View Annotations page
+        st.header("View Annotations")
+        for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
+            annotations = load_annotations(user)
+            st.subheader(user)
+            st.dataframe(annotations)
 
 if __name__ == "__main__":
     main()
