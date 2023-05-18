@@ -69,9 +69,17 @@ def main():
     # User Annotations page
     st.sidebar.markdown("---")
     st.sidebar.markdown("**User Annotations**")
-    user = st.sidebar.text_input("Enter User Name", key="user_input")
+    user = st.sidebar.selectbox("Select User",
+                                ["Nurit", "Ittamar", "Gabi", "Shahar"])
 
-    if user:
+    # Annotation Options Guide page
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**Annotation Options Guide**")
+    if st.sidebar.button("Go to Annotation Options Guide"):
+        # Render the Annotation Options Guide page
+        annotation_options_guide()
+
+    if not view_all_annotations:
         # Load user's annotations
         user_annotations = load_annotations(user)
 
