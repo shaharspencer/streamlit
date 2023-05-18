@@ -1,0 +1,18 @@
+Evaluation	Example + explanation
+ordinary	
+creative	Also indicate in a separate column how creative (1-5)
+	positions that noone in their right mind wants to be pretzelized into.
+	[paste here example from AS dimension]
+spelling variant	"Words which are correctly tagged as verbs, but because of the spelling are not identified as the intended verb."
+	I have started making the large scroll duffelbag that I was planing for a while. (analyzed as lemma = PLANE)
+	wads it lyk 2 lyk or love sum1
+wrong lemma	"Words which are correctly tagged as verbs, but the lemma is wrong."
+	the llama caught up with JAKE and bit him right in the hinder. (analyzed as lemma = BIT instead of BITE)
+	
+	"ThAt i WenT tO tHe dErMoTOLoGiSt To SeE iF i QuALiFiEd fOr ThIs sTuDy..AnD i DiD! (qualified as LEMMA, instead of qualify)"
+not a verb	Words which are wrongly tagged as verbs..
+	ROSS AND RACHEL ARE TOGETHER FOREVER!!!!!!!!
+	(ROSS = verb)
+algorithm error	These are cases which we want to filter out by improving the algorithm.
+	"Painted house (“painted” is a transitive verb, but in this context it is a noun modifier and doesn’t have dependents)"
+not English	
