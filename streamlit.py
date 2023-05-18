@@ -80,18 +80,19 @@ def main():
             st.write(sentence)
 
             # Display expand button under the sentence
-            expand_button = st.button("Expand", key=f"expand_button_{index}")
+            expand_button = st.button("Expand",
+                                      key=f"{user}_expand_button_{index}")
             if expand_button:
-                # Toggle visibility of extra data
-                if f"expanded_{index}" not in st.session_state:
-                    st.session_state[f"expanded_{index}"] = True
+                # Toggle visibility of extra data for the current user only
+                if f"{user}_expanded_{index}" not in st.session_state:
+                    st.session_state[f"{user}_expanded_{index}"] = True
                 else:
-                    st.session_state[f"expanded_{index}"] = not \
-                    st.session_state[f"expanded_{index}"]
+                    st.session_state[f"{user}_expanded_{index}"] = not \
+                    st.session_state[f"{user}_expanded_{index}"]
 
-            # Display extra data if expanded
-            if f"expanded_{index}" in st.session_state and st.session_state[
-                f"expanded_{index}"]:
+            # Display extra data if expanded for the current user
+            if f"{user}_expanded_{index}" in st.session_state and \
+                    st.session_state[f"{user}_expanded_{index}"]:
                 # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
