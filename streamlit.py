@@ -91,6 +91,8 @@ def main():
         # Display user's annotations
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
+            if index >= 100:  # Skip sentences beyond the first 100
+                break
             sentence = row["Sentence"]
             sentence_number = index + 1  # Add 1 to the index to display the sentence number
             # Display the sentence number and sentence
