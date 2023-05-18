@@ -145,10 +145,10 @@ def main():
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
-            notes_relevant = st.text_area("Notes on relevant dimension",
-                                          value=row["Notes on relevant dimension"],
-                                          key=f"{user}_notes_relevant_{index}")
-            user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant
+            notes_relevant_dimension = st.text_area("Notes on relevant dimension",
+                                 value=row["Notes on relevant dimension"],
+                                 key=f"{user}_notes_relevant_dimension_{index}")
+            user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
