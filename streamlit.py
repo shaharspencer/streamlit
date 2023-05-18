@@ -18,14 +18,15 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
+        annotations = pd.DataFrame(columns=["Sentence", "Annotation", "Notes"])
 
     if "Annotation" not in annotations.columns:
         annotations["Annotation"] = "a"  # Set default annotation to "a"
 
-    merged = pd.merge(data, annotations[["Sentence", "Annotation"]],
+    merged = pd.merge(data, annotations[["Sentence", "Annotation", "Notes"]],
                       on="Sentence", how="outer")
     merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
+    merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
 
@@ -63,6 +64,10 @@ def main():
                                       key=f"{user}_tag_selectbox_{index}",
                                       index=ord(row["Annotation"]) - ord("a"))
             user_annotations.at[index, "Annotation"] = annotation
+
+            notes = st.text_area("Notes", value=row["Notes"], key=f"{user}_notes_{index}")
+            user_annotations.at[index, "Notes"] = notes
+
             # Save user's annotations for each selection
             save_annotations(user, user_annotations)
 
