@@ -32,36 +32,39 @@ def download_dataframe(dataframe):
 # Main app
 def main():
     # Sidebar menu
-    menu = st.sidebar.selectbox("Menu", ["View Annotations", "User Annotations"])
+    st.sidebar.image("view_annotations_icon.png", width=50)  # Replace with the path to your icon image
+    st.sidebar.markdown("**View Annotations**", unsafe_allow_html=True)
+    st.sidebar.markdown("---")
 
-    if menu == "View Annotations":
-        # View Annotations page
+    # Check if the "View Annotations" page is selected
+    if st.sidebar.button("View Annotations"):
         st.header("View Annotations")
         for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             annotations = load_annotations(user)
             st.subheader(user)
             st.dataframe(annotations)
 
-    elif menu == "User Annotations":
-        # Get user name
-        user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+    # User Annotations page
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**User Annotations**")
+    user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
-        # Load user's annotations
-        user_annotations = load_annotations(user)
+    # Load user's annotations
+    user_annotations = load_annotations(user)
 
-        # Display user's annotations
-        st.header("User Annotations")
-        for index, row in user_annotations.iterrows():
-            st.write(row["Sentence"])
-            annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
-            user_annotations.at[index, "Annotation"] = annotation
-            # Save user's annotations for each selection
-            save_annotations(user, user_annotations)
+    # Display user's annotations
+    st.header("User Annotations")
+    for index, row in user_annotations.iterrows():
+        st.write(row["Sentence"])
+        annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
+        user_annotations.at[index, "Annotation"] = annotation
+        # Save user's annotations for each selection
+        save_annotations(user, user_annotations)
 
-        st.write("Changes saved automatically")
+    st.write("Changes saved automatically")
 
-        # Add download button for the user's dataframe
-        st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+    # Add download button for the user's dataframe
+    st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
