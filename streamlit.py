@@ -43,10 +43,24 @@ def main():
     # Check if the "View Annotations" option is selected
     if st.sidebar.button("View All Annotations"):
         st.header("View All Annotations")
+        all_annotations = pd.DataFrame()  # Create an empty dataframe to store all annotations
         for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             annotations = load_annotations(user)
             st.subheader(f"{user}'s Annotations")
             st.dataframe(annotations)
+
+            # Add download button for the user's dataframe
+            st.markdown(download_dataframe(annotations), unsafe_allow_html=True)
+
+            # Concatenate the annotations to the all_annotations dataframe
+            all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
+
+        # Add a subheader for concatenated data
+        st.subheader("Concatenated Annotations")
+        st.dataframe(all_annotations)
+
+        # Add download button for the concatenated dataframe
+        st.markdown(download_dataframe(all_annotations), unsafe_allow_html=True)
 
     # User Annotations page
     st.sidebar.markdown("---")
