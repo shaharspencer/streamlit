@@ -3,7 +3,7 @@ import pandas as pd
 import base64
 import spacy
 from spacy import displacy
-from streamlit.elements import html
+
 
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv")
