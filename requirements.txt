@@ -346,8 +346,3 @@ yarl==1.9.2
 zict==2.1.0
 zipp @ file:///C:/ci/zipp_1652273994994/work
 zope.interface @ file:///C:/ci/zope.interface_1625036252485/work
-en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl
-pandas==1.5.3
-requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1673863902341/work
-spacy==3.5.0
-
