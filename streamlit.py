@@ -76,10 +76,21 @@ def main():
         # Display user's annotations
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
-            st.write(row["Sentence"])
+            sentence = row["Sentence"]
+            expand_button = st.button("Expand", key=f"expand_button_{index}")
+            if expand_button:
+                # Toggle visibility of extra data
+                if f"expanded_{index}" not in st.session_state:
+                    st.session_state[f"expanded_{index}"] = True
+                else:
+                    st.session_state[f"expanded_{index}"] = not \
+                    st.session_state[f"expanded_{index}"]
 
-            # Display a button to expand and show extra data
-            if st.button("Expand"):
+            st.write(sentence)
+
+            # Display extra data if expanded
+            if f"expanded_{index}" in st.session_state and st.session_state[
+                f"expanded_{index}"]:
                 # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
