@@ -32,9 +32,17 @@ def download_dataframe(dataframe):
 # Main app
 def main():
     # Sidebar menu
-    menu = st.sidebar.selectbox("Menu", ["User Annotations", "View Annotations"])
+    menu = st.sidebar.selectbox("Menu", ["View Annotations", "User Annotations"])
 
-    if menu == "User Annotations":
+    if menu == "View Annotations":
+        # View Annotations page
+        st.header("View Annotations")
+        for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
+            annotations = load_annotations(user)
+            st.subheader(user)
+            st.dataframe(annotations)
+
+    elif menu == "User Annotations":
         # Get user name
         user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
@@ -54,14 +62,6 @@ def main():
 
         # Add download button for the user's dataframe
         st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
-
-    elif menu == "View Annotations":
-        # View Annotations page
-        st.header("View Annotations")
-        for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
-            annotations = load_annotations(user)
-            st.subheader(user)
-            st.dataframe(annotations)
 
 if __name__ == "__main__":
     main()
