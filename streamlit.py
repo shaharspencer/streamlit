@@ -17,7 +17,7 @@ def load_annotations(user):
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
         annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
-    merged = pd.merge(data, annotations, on="Sentence", how="outer")
+    merged = pd.merge(data, annotations[["Sentence", "Annotation"]], on="Sentence", how="outer")
     merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
