@@ -33,7 +33,9 @@ def download_merged_dataframe(merged_dataframe):
 def main():
     st.sidebar.markdown("**Annotations**")
 
-    if st.sidebar.button("View All Annotations"):
+    view_all_annotations = st.sidebar.button("View All Annotations")
+
+    if view_all_annotations:
         st.header("View All Annotations")
         merged_annotations = pd.DataFrame(data["Sentence"])
         for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
@@ -43,20 +45,37 @@ def main():
         st.dataframe(merged_annotations)
         st.markdown(download_merged_dataframe(merged_annotations), unsafe_allow_html=True)
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("**User Annotations**")
-    user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
-    user_annotations = load_annotations(user)
-    st.header(f"{user}'s Annotations")
-    for index, row in user_annotations.iterrows():
-        st.write(row["Sentence"])
-        annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}",
-                                  index=ord(row["Annotation"]) - ord("a"))
-        user_annotations.at[index, "Annotation"] = annotation
-        save_annotations(user, user_annotations)
+        # Show user-specific annotations
+        st.sidebar.markdown("**User Annotations**")
+        user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+        user_annotations = load_annotations(user)
+        st.header(f"{user}'s Annotations")
+        for index, row in user_annotations.iterrows():
+            st.write(row["Sentence"])
+            annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}",
+                                      index=ord(row["Annotation"]) - ord("a"))
+            user_annotations.at[index, "Annotation"] = annotation
+            save_annotations(user, user_annotations)
 
-    st.write("Changes saved automatically")
-    st.markdown(download_merged_dataframe(user_annotations), unsafe_allow_html=True)
+        st.write("Changes saved automatically")
+        st.markdown(download_merged_dataframe(user_annotations), unsafe_allow_html=True)
+
+    else:
+        # Show user-specific annotations
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**User Annotations**")
+        user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+        user_annotations = load_annotations(user)
+        st.header(f"{user}'s Annotations")
+        for index, row in user_annotations.iterrows():
+            st.write(row["Sentence"])
+            annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}",
+                                      index=ord(row["Annotation"]) - ord("a"))
+            user_annotations.at[index, "Annotation"] = annotation
+            save_annotations(user, user_annotations)
+
+        st.write("Changes saved automatically")
+        st.markdown(download_merged_dataframe(user_annotations), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
