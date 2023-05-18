@@ -77,17 +77,14 @@ def main():
         for index, row in user_annotations.iterrows():
             st.write(row["Sentence"])
             annotation = st.selectbox("Annotation", options=[
-                                            "ordinary",
-                                            "creative",
-                                            "spelling variant",
-                                            "wrong lemma",
-                                            "not a verb",
-                                            "algorithm error",
-                                            "not English"
-                                                ]
-                                            ,
-                                      key=f"{user}_tag_selectbox_{index}",
-                                      index=ord(row["Annotation"]) - ord("a"))
+                "ordinary",
+                "creative",
+                "spelling variant",
+                "wrong lemma",
+                "not a verb",
+                "algorithm error",
+                "not English"
+            ], key=f"{user}_tag_selectbox_{index}")
             user_annotations.at[index, "Annotation"] = annotation
 
             notes = st.text_area("Notes", value=row["Notes"], key=f"{user}_notes_{index}")
