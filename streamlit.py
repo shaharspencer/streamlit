@@ -8,7 +8,7 @@ from spacy import displacy
 data = pd.read_csv("your_dataframe.csv")
 
 # Load spaCy model
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_lg")
 
 
 # Define a function to save annotations
