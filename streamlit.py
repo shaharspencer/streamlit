@@ -95,7 +95,7 @@ def main():
             sentence_number = index + 1  # Add 1 to the index to display the sentence number
             # Display the sentence number and sentence
             st.write(f"Sentence {sentence_number}:")
-            st.write(sentence)
+            # st.write(sentence)
             doc = nlp(sentence)
 
             # Iterate over the tokens in the sentence
