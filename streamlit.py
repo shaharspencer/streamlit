@@ -71,14 +71,17 @@ def main():
         # Add download button for the user's dataframe
         st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
 
-    # Remove the View All Annotations section from each user's annotation page
+    # View All Annotations section
     if view_all_annotations:
         st.header("View All Annotations")
+        all_annotations = pd.DataFrame()
         for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
-            if u != user:  # Skip the current user's annotations
+            if u != user:  # Exclude the current user's annotations
                 annotations = load_annotations(u)
-                st.subheader(f"{u}'s Annotations")
-                st.dataframe(annotations)
+                all_annotations = all_annotations.append(annotations, ignore_index=True)
+
+        st.subheader("All Annotations")
+        st.dataframe(all_annotations)
 
 
 if __name__ == "__main__":
