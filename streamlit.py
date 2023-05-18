@@ -70,7 +70,7 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.markdown("**User Annotations**")
     user = st.sidebar.selectbox("Select User",
-                                ["Gabi", "Shahar", "Nurit", "Ittamar"])
+                                ["Nurit", "Ittamar", "Gabi", "Shahar"])
 
     # Annotation Options Guide page
     st.sidebar.markdown("---")
@@ -170,7 +170,7 @@ def main():
     if view_all_annotations:
         st.header("View All Annotations")
         all_annotations = pd.DataFrame()
-        for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
+        for u in ["Nurit", "Ittamar", "Gabi", "Shahar"]:
             annotations = load_annotations(u)
             annotations["Annotator"] = u  # Add "Annotator" column with the annotator's name
             all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
