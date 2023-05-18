@@ -47,13 +47,7 @@ def main():
     st.sidebar.markdown("**User Annotations**")
     user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
-    if view_all_annotations:
-        st.header("View All Annotations")
-        for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
-            annotations = load_annotations(u)
-            st.subheader(f"{u}'s Annotations")
-            st.dataframe(annotations)
-    else:
+    if not view_all_annotations:
         # Load user's annotations
         user_annotations = load_annotations(user)
 
@@ -72,6 +66,13 @@ def main():
 
         # Add download button for the user's dataframe
         st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+
+    # View All Annotations page
+    st.header("View All Annotations")
+    for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
+        annotations = load_annotations(u)
+        st.subheader(f"{u}'s Annotations")
+        st.dataframe(annotations)
 
 
 if __name__ == "__main__":
