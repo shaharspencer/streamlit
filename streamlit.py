@@ -8,7 +8,7 @@ from spacy import displacy
 data = pd.read_csv("your_dataframe.csv")
 
 # Load spaCy model
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 
 # Define a function to save annotations
@@ -126,7 +126,7 @@ def main():
                     st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
                 # Display the dependency tree for the current sentence
                 sent = nlp(sentence)
-                svg = displacy.render(sent, style="dep", options={"compact": True})
+                svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
 
             annotation = st.selectbox("Tag according to dimension", options=[
