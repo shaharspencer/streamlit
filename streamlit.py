@@ -18,17 +18,17 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Tag", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Annotation", "Notes"])
 
-    if "Tag" not in annotations.columns:
-        annotations["Tag"] = "ordinary"  # Set default tag to "ordinary"
+    if "Annotation" not in annotations.columns:
+        annotations["Annotation"] = ""  # Set default annotation to ""
 
     if "Notes" not in annotations.columns:
         annotations["Notes"] = ""  # Add empty "Notes" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Tag", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Annotation", "Notes"]],
                       on="Sentence", how="outer")
-    merged["Tag"].fillna("ordinary", inplace=True)  # Set default tag to "ordinary"
+    merged["Annotation"].fillna("", inplace=True)  # Set default annotation to ""
     merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
@@ -76,12 +76,19 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             st.write(row["Sentence"])
-            annotation = st.selectbox("Tag according to the dimension this sentence was extracted in",
-                                      options=["ordinary", "creative", "spelling variant",
-                                               "wrong lemma", "not a verb", "algorithm error", "not English"],
+            annotation = st.selectbox("Annotation", options=[
+                                            "ordinary",
+                                            "creative",
+                                            "spelling variant",
+                                            "wrong lemma",
+                                            "not a verb",
+                                            "algorithm error",
+                                            "not English"
+                                                ]
+                                            ,
                                       key=f"{user}_tag_selectbox_{index}",
-                                      index=row["Tag"])
-            user_annotations.at[index, "Tag"] = annotation
+                                      index=ord(row["Annotation"]) - ord("a"))
+            user_annotations.at[index, "Annotation"] = annotation
 
             notes = st.text_area("Notes", value=row["Notes"], key=f"{user}_notes_{index}")
             user_annotations.at[index, "Notes"] = notes
