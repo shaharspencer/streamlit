@@ -1,9 +1,14 @@
 import streamlit as st
 import pandas as pd
 import base64
+import spacy
+from spacy import displacy
 
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv")
+
+# Load spaCy model
+nlp = spacy.load("en_core_web_sm")
 
 
 # Define a function to save annotations
@@ -85,19 +90,30 @@ def main():
             if expand_button:
                 # Toggle visibility of extra data for the current user only
                 if f"{user}_expanded_{index}" not in st.session_state:
-                    st.session_state[f"{user}_expanded_{index}"] = True
+                    st.session_state[f"{user}_expanded_{index}"] = {
+                        "extra_data": True,
+                        "dependency_tree": True
+                    }
                 else:
-                    st.session_state[f"{user}_expanded_{index}"] = not \
-                    st.session_state[f"{user}_expanded_{index}"]
+                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"] = not \
+                        st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]
 
             # Display extra data if expanded for the current user
             if f"{user}_expanded_{index}" in st.session_state and \
-                    st.session_state[f"{user}_expanded_{index}"]:
+                    st.session_state[f"{user}_expanded_{index}"]["extra_data"]:
                 # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
                                       "Notes on relevant dimension"]:
                         st.write(f"{column}: {row[column]}")
+
+            # Display dependency tree if expanded for the current user
+            if f"{user}_expanded_{index}" in st.session_state and \
+                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
+                # Display the dependency tree for the current sentence
+                sent = nlp(sentence)
+                svg = displacy.render(sent, style="dep")
+                st.write(svg, unsafe_allow_html=True)
 
             annotation = st.selectbox("Tag according to dimension", options=[
                 "ordinary",
