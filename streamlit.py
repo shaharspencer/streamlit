@@ -78,11 +78,13 @@ def main():
         for index, row in user_annotations.iterrows():
             st.write(row["Sentence"])
 
-            # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
-            for column in data.columns:
-                if column not in ["Sentence", "Tag according to dimension",
-                                  "Notes on relevant dimension"]:
-                    st.write(f"{column}: {row[column]}")
+            # Display a button to expand and show extra data
+            if st.button("Expand"):
+                # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
+                for column in data.columns:
+                    if column not in ["Sentence", "Tag according to dimension",
+                                      "Notes on relevant dimension"]:
+                        st.write(f"{column}: {row[column]}")
 
             annotation = st.selectbox("Tag according to dimension", options=[
                 "ordinary",
