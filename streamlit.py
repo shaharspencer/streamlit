@@ -3,6 +3,7 @@ import pandas as pd
 import base64
 import spacy
 from spacy import displacy
+from streamlit.elements import html
 
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv")
@@ -10,10 +11,12 @@ data = pd.read_csv("your_dataframe.csv")
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
 
+
 # Define a function to save annotations
 def save_annotations(user, annotations):
     file_name = f"{user}_annotations.csv"
     annotations.to_csv(file_name, index=False)
+
 
 # Define a function to load annotations
 def load_annotations(user):
@@ -40,6 +43,7 @@ def load_annotations(user):
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
 
+
 # Define a function to download the dataframe as a CSV file
 def download_dataframe(dataframe):
     csv = dataframe.to_csv(index=False)
@@ -47,25 +51,15 @@ def download_dataframe(dataframe):
     href = f'<a href="data:file/csv;base64,{b64}" download="user_annotations.csv">Download CSV</a>'
     return href
 
+
 # Annotation Options Guide page
 def annotation_options_guide():
     st.header("Annotation Options Guide")
     # Add content for the Annotation Options Guide page
 
+
 # Main app
 def main():
-    # Custom CSS for styling
-    st.markdown(
-        """
-        <style>
-        .sidebar .sidebar-content {
-            background-color: #B3C1D9;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
     # Sidebar menu
     st.sidebar.markdown("**Annotations**")
 
@@ -75,7 +69,8 @@ def main():
     # User Annotations page
     st.sidebar.markdown("---")
     st.sidebar.markdown("**User Annotations**")
-    user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+    user = st.sidebar.selectbox("Select User",
+                                ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
     # Annotation Options Guide page
     st.sidebar.markdown("---")
@@ -91,26 +86,13 @@ def main():
         # Display user's annotations
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
-            if index >= 100:  # Skip sentences beyond the first 100
-                break
             sentence = row["Sentence"]
-            sentence_number = index + 1  # Add 1 to the index to display the sentence number
-            # Display the sentence number and sentence
-            st.write(f"Sentence {sentence_number}:")
-            # st.write(sentence)
-            doc = nlp(sentence)
-
-            # Iterate over the tokens in the sentence
-            for token in doc:
-                if token.i == row["index of verb"]:
-                    # Render the token in bold
-                    sentence = sentence.replace(token.text, f"<b>{token.text}</b>")
-
-            # Display the modified sentence
-            st.markdown(sentence, unsafe_allow_html=True)
+            sentence_number = index + 1
+            st.write(f"Sentence {sentence_number}: {sentence}")
 
             # Display expand button under the sentence
-            expand_button = st.button("Expand", key=f"{user}_expand_button_{index}")
+            expand_button = st.button("Expand",
+                                      key=f"{user}_expand_button_{index}")
             if expand_button:
                 # Toggle visibility of extra data and dependency tree for the current user only
                 if f"{user}_expanded_{index}" not in st.session_state:
@@ -162,7 +144,8 @@ def main():
                 "algorithm error",
                 "not English"
             ], key=f"{user}_tag_selectbox_{index}")
-            user_annotations.at[index, "Tag according to dimension"] = annotation
+            user_annotations.at[
+                index, "Tag according to dimension"] = annotation
 
             notes_relevant_dimension = st.text_area("Notes on relevant dimension",
                                                     value=row["Notes on relevant dimension"],
@@ -185,31 +168,19 @@ def main():
 
     # View All Annotations section
     if view_all_annotations:
-        st.header("All Annotations")
-        for index, row in data.iterrows():
-            sentence = row["Sentence"]
-            doc = nlp(sentence)
+        st.header("View All Annotations")
+        all_annotations = pd.DataFrame()
+        for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
+            annotations = load_annotations(u)
+            annotations["Annotator"] = u  # Add "Annotator" column with the annotator's name
+            all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
 
-            # Iterate over the tokens in the sentence
-            for token in doc:
-                if token.i == row["index of verb"]:
-                    # Render the token in bold
-                    sentence = sentence.replace(token.text, f"<b>{token.text}</b>")
+        st.subheader("All Annotations")
+        st.dataframe(all_annotations)
 
-            # Display the modified sentence
-            st.markdown(sentence, unsafe_allow_html=True)
+        # Download all annotations as a single CSV file
+        st.markdown(download_dataframe(all_annotations), unsafe_allow_html=True)
 
-            # Display all columns except "Sentence", "Tag according to dimension", "Notes on relevant dimension", and "Notes"
-            for column in data.columns:
-                if column not in ["Sentence", "Tag according to dimension",
-                                  "Notes on relevant dimension", "Notes"]:
-                    st.write(f"{column}: {row[column]}")
 
-    # Footer
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("**About**")
-    st.sidebar.write("This app allows users to annotate sentences according to dimensions.")
-
-# Run the app
 if __name__ == "__main__":
     main()
