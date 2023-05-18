@@ -38,6 +38,7 @@ def main():
     user_annotations = load_annotations(user)
 
     # Display user's annotations
+    st.header("User Annotations")
     for index, row in user_annotations.iterrows():
         st.write(row["Sentence"])
         annotation = st.selectbox("Annotation", options=["a", "b", "c"], key=f"{user}_tag_selectbox_{index}", index=ord(row["Annotation"]) - ord("a"))
@@ -49,6 +50,13 @@ def main():
 
     # Add download button for the user's dataframe
     st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+
+    # View Annotations section
+    st.header("View Annotations")
+    for user in ["Nurit", "Ittamar", "Gabi", "Shahar"]:
+        annotations = load_annotations(user)
+        st.subheader(user)
+        st.dataframe(annotations)
 
 if __name__ == "__main__":
     main()
