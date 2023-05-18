@@ -59,7 +59,8 @@ def main():
     # User Annotations page
     st.sidebar.markdown("---")
     st.sidebar.markdown("**User Annotations**")
-    user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
+    user = st.sidebar.selectbox("Select User",
+                                ["Gabi", "Shahar", "Nurit", "Ittamar"])
 
     # Annotation Options Guide page
     st.sidebar.markdown("---")
@@ -76,6 +77,13 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             st.write(row["Sentence"])
+
+            # Iterate over all columns except "Sentence", "Tag according to dimension", and "Notes on relevant dimension"
+            for column in data.columns:
+                if column not in ["Sentence", "Tag according to dimension",
+                                  "Notes on relevant dimension"]:
+                    st.write(f"{column}: {row[column]}")
+
             annotation = st.selectbox("Tag according to dimension", options=[
                 "ordinary",
                 "creative",
@@ -85,9 +93,12 @@ def main():
                 "algorithm error",
                 "not English"
             ], key=f"{user}_tag_selectbox_{index}")
-            user_annotations.at[index, "Tag according to dimension"] = annotation
+            user_annotations.at[
+                index, "Tag according to dimension"] = annotation
 
-            notes = st.text_area("Notes on relevant dimension", value=row["Notes on relevant dimension"], key=f"{user}_notes_{index}")
+            notes = st.text_area("Notes on relevant dimension",
+                                 value=row["Notes on relevant dimension"],
+                                 key=f"{user}_notes_{index}")
             user_annotations.at[index, "Notes on relevant dimension"] = notes
 
             # Save user's annotations for each selection
@@ -96,7 +107,8 @@ def main():
         st.write("Changes saved automatically")
 
         # Add download button for the user's dataframe
-        st.markdown(download_dataframe(user_annotations), unsafe_allow_html=True)
+        st.markdown(download_dataframe(user_annotations),
+                    unsafe_allow_html=True)
 
     # View All Annotations section
     if view_all_annotations:
@@ -104,8 +116,10 @@ def main():
         all_annotations = pd.DataFrame()
         for u in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             annotations = load_annotations(u)
-            annotations["Annotator"] = u  # Add "Annotator" column with the annotator's name
-            all_annotations = pd.concat([all_annotations, annotations], ignore_index=True)
+            annotations[
+                "Annotator"] = u  # Add "Annotator" column with the annotator's name
+            all_annotations = pd.concat([all_annotations, annotations],
+                                        ignore_index=True)
 
         st.subheader("All Annotations")
         st.dataframe(all_annotations)
