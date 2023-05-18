@@ -5,6 +5,9 @@ import base64
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv")
 
+# Modify column names in the data DataFrame to avoid duplicates during merging
+data.columns = [f"{col}_data" for col in data.columns]
+
 # Define a function to save annotations
 def save_annotations(user, annotations):
     file_name = f"{user}_annotations.csv"
@@ -47,6 +50,7 @@ def main():
 
     else:
         # Show user-specific annotations
+        st.sidebar.markdown("---")
         st.sidebar.markdown("**User Annotations**")
         user = st.sidebar.selectbox("Select User", ["Gabi", "Shahar", "Nurit", "Ittamar"])
         user_annotations = load_annotations(user)
