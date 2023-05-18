@@ -23,6 +23,9 @@ def load_annotations(user):
     if "Annotation" not in annotations.columns:
         annotations["Annotation"] = "a"  # Set default annotation to "a"
 
+    if "Notes" not in annotations.columns:
+        annotations["Notes"] = ""  # Add empty "Notes" column if not present
+
     merged = pd.merge(data, annotations[["Sentence", "Annotation", "Notes"]],
                       on="Sentence", how="outer")
     merged["Annotation"].fillna("a", inplace=True)  # Set default annotation to "a"
