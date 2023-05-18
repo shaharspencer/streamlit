@@ -8,7 +8,7 @@ from spacy import displacy
 data = pd.read_csv("your_dataframe.csv")
 
 # Load spaCy model
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 
 # Define a function to save annotations
@@ -88,15 +88,15 @@ def main():
             expand_button = st.button("Expand",
                                       key=f"{user}_expand_button_{index}")
             if expand_button:
-                # Toggle visibility of extra data for the current user only
+                # Toggle visibility of extra data and dependency tree for the current user only
                 if f"{user}_expanded_{index}" not in st.session_state:
                     st.session_state[f"{user}_expanded_{index}"] = {
                         "extra_data": True,
-                        "dependency_tree": True
+                        "dependency_tree": False
                     }
                 else:
-                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"] = not \
-                        st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]
+                    st.session_state[f"{user}_expanded_{index}"]["extra_data"] = not \
+                        st.session_state[f"{user}_expanded_{index}"]["extra_data"]
 
             # Display extra data if expanded for the current user
             if f"{user}_expanded_{index}" in st.session_state and \
@@ -107,12 +107,26 @@ def main():
                                       "Notes on relevant dimension"]:
                         st.write(f"{column}: {row[column]}")
 
+            # Display dependency tree button
+            dependency_tree_button = st.button("Show Dependency Tree",
+                                               key=f"{user}_dependency_tree_button_{index}")
+            if dependency_tree_button:
+                # Toggle visibility of the dependency tree for the current user only
+                if f"{user}_expanded_{index}" not in st.session_state:
+                    st.session_state[f"{user}_expanded_{index}"] = {
+                        "extra_data": False,
+                        "dependency_tree": True
+                    }
+                else:
+                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"] = not \
+                        st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]
+
             # Display dependency tree if expanded for the current user
             if f"{user}_expanded_{index}" in st.session_state and \
                     st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
                 # Display the dependency tree for the current sentence
                 sent = nlp(sentence)
-                svg = displacy.render(sent, style="dep")
+                svg = displacy.render(sent, style="dep", options={"compact": True})
                 st.write(svg, unsafe_allow_html=True)
 
             annotation = st.selectbox("Tag according to dimension", options=[
