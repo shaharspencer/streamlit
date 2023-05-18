@@ -18,8 +18,7 @@ def load_annotations(user):
     except FileNotFoundError:
         annotations = pd.DataFrame(columns=["Sentence", "Annotation"])
     annotations = annotations.rename(columns={"Annotation": f"Annotation_{user}"})
-    merged = pd.merge(data, annotations[["Sentence", f"Annotation_{user}"]],
-                      on="Sentence", how="outer")
+    merged = pd.merge(data, annotations, on="Sentence", how="outer")
     merged[f"Annotation_{user}"].fillna("a", inplace=True)
     merged.drop_duplicates(inplace=True)
     return merged
@@ -39,11 +38,10 @@ def main():
 
     if view_all_annotations:
         st.header("View All Annotations")
-        merged_annotations = pd.DataFrame(data["Sentence"])
+        merged_annotations = pd.DataFrame(data)
         for user in ["Gabi", "Shahar", "Nurit", "Ittamar"]:
             annotations = load_annotations(user)
-            merged_annotations = pd.merge(merged_annotations, annotations[["Sentence", f"Annotation_{user}"]],
-                                          on="Sentence", how="left")
+            merged_annotations = pd.merge(merged_annotations, annotations, on="Sentence", how="left")
         st.dataframe(merged_annotations)
         st.markdown(download_merged_dataframe(merged_annotations), unsafe_allow_html=True)
 
