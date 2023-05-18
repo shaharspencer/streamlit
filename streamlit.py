@@ -77,6 +77,9 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             sentence = row["Sentence"]
+            st.write(sentence)
+
+            # Display expand button under the sentence
             expand_button = st.button("Expand", key=f"expand_button_{index}")
             if expand_button:
                 # Toggle visibility of extra data
@@ -85,8 +88,6 @@ def main():
                 else:
                     st.session_state[f"expanded_{index}"] = not \
                     st.session_state[f"expanded_{index}"]
-
-            st.write(sentence)
 
             # Display extra data if expanded
             if f"expanded_{index}" in st.session_state and st.session_state[
