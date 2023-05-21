@@ -92,7 +92,7 @@ def main():
             doc = nlp(sentence)
             # Iterate over the tokens in the sentence
             for token in doc:
-                if token.i == row["index"]:
+                if token.i == row["index of verb"]:
                     # Render the token in bold
                     sentence = sentence.replace(token.text,
                                                 f"<b>{token.text}</b>")
