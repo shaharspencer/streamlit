@@ -31,21 +31,21 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Creativity Score (1-5)", "Notes"])
 
     if "Tag according to dimension" not in annotations.columns:
         annotations["Tag according to dimension"] = ""  # Set default annotation to ""
 
-    if "Notes on relevant dimension" not in annotations.columns:
-        annotations["Notes on relevant dimension"] = ""  # Add empty "Notes on relevant dimension" column if not present
+    if "Creativity Score (1-5)" not in annotations.columns:
+        annotations["Creativity Score (1-5)"] = ""  # Add empty "Notes on relevant dimension" column if not present
 
     if "Notes" not in annotations.columns:
         annotations["Notes"] = ""  # Add empty "Notes" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Creativity Score (1-5)", "Notes"]],
                       on="Sentence", how="outer")
     merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
-    merged["Notes on relevant dimension"].fillna("", inplace=True)  # Set default notes to empty string
+    merged["Creativity Score (1-5)"].fillna("", inplace=True)  # Set default notes to empty string
     merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
@@ -144,7 +144,7 @@ def main():
                 # Iterate over all columns except "Sentence", "Tag according to dimension", "Notes on relevant dimension", and "Notes"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
-                                      "Notes on relevant dimension", "Notes"]:
+                                      "Creativity Score (1-5)", "Notes"]:
                         st.write(f"{column}: {row[column]}")
 
 
@@ -161,10 +161,10 @@ def main():
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
-            notes_relevant_dimension = st.text_area("Notes on relevant dimension",
-                                                    value=row["Notes on relevant dimension"],
+            notes_relevant_dimension = st.text_area("Creativity Score (1-5)",
+                                                    value=row["Creativity Score (1-5)"],
                                                     key=f"{user}_notes_relevant_dimension_{index}")
-            user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
+            user_annotations.at[index, "Creativity Score (1-5)"] = notes_relevant_dimension
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
