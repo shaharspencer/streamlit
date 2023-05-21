@@ -105,9 +105,10 @@ def main():
             for token in doc:
                 if token.i == row["index of verb"]:
                     # Render the token in bold
-                    new_sentence = row["Sentence"]
-                    new_sentence = new_sentence.replace(token.text,
-                                                f"<b>{token.text}</b>")
+                    new_sentence = sentence
+                    # new_sentence = row["Sentence"]
+                    # new_sentence = new_sentence.replace(token.text,
+                    #                             f"<b>{token.text}</b>")
             sentence_number = index + 1
             st.markdown(f"Sentence {sentence_number}: {new_sentence}", unsafe_allow_html=True)
 
