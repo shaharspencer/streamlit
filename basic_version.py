@@ -2,8 +2,7 @@ import os
 import pathlib
 import tempfile
 import urllib
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPM
+
 
 import streamlit as st
 import pandas as pd
@@ -77,16 +76,14 @@ def annotation_options_guide():
         sent = nlp(sentence)
 
         # if rendering does not exist
-        file_name = os.path.join("21_05_2023/verb_renderings", "sentence_{index}.png")
+        file_name = os.path.join("21_05_2023/verb_renderings", "sentence_{index}.jpg")
         if not os.path.exists(file_name):
             svg = spacy.displacy.render(sent, style="dep")
-            svg_to_image(svg, file_name)
+            file_name.open('w', encoding="utf-8").write(svg)
+
 
         st.image(file_name)
 
-def svg_to_image(svg, image_path):
-    drawing = svg2rlg(svg)
-    renderPM.drawToFile(drawing, image_path, fmt="PNG")
 
 
 # Main app
