@@ -89,7 +89,6 @@ def main():
 
 
             sentence = row["Sentence"]
-            sentence_number = index + 1
             doc = nlp(sentence)
             # Render the token in bold
             for token in doc:
