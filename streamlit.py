@@ -86,12 +86,21 @@ def main():
         # Display user's annotations
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
-            if index >= 100:
-                break
+
 
             sentence = row["Sentence"]
             sentence_number = index + 1
-            st.write(f"Sentence {sentence_number}: {sentence}")
+            doc = nlp(sentence)
+            # Render the token in bold
+            for token in doc:
+                if token.i == row["index of verb"]:
+
+                    new_sentence = sentence.replace(token.text,
+                                                           f"<b>{token.text}</b>")
+            sentence_number = index + 1
+            st.markdown(f"Sentence {sentence_number}: {new_sentence}",
+                        unsafe_allow_html=True)
+
 
             # Display expand button under the sentence
             expand_button = st.button("Expand",
