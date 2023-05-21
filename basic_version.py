@@ -2,7 +2,8 @@ import os
 import pathlib
 import tempfile
 import urllib
-import cairosvg
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
 
 import streamlit as st
 import pandas as pd
@@ -84,10 +85,8 @@ def annotation_options_guide():
         st.image(file_name)
 
 def svg_to_image(svg, image_path):
-    # Convert SVG to image using an appropriate library (e.g., cairosvg, matplotlib, etc.)
-    # Save the image to the specified path
-    # Example using cairosvg:
-    cairosvg.svg2png(bytestring=svg, write_to=image_path)
+    drawing = svg2rlg(svg)
+    renderPM.drawToFile(drawing, image_path, fmt="PNG")
 
 
 # Main app
