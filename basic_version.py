@@ -2,6 +2,7 @@ import os
 import pathlib
 import tempfile
 import urllib
+import spacy_streamlit
 
 
 import streamlit as st
@@ -14,7 +15,7 @@ HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; borde
 
 # Load data from CSV file
 data = pd.read_csv("your_dataframe.csv", encoding="ISO-8859-1")
-
+model = "en_core_web_lg"
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
 
@@ -74,10 +75,11 @@ def annotation_options_guide():
         st.markdown(f"Sentence {sentence_number}: {new_sentence}",
                     unsafe_allow_html=True)
 
-        sent = nlp(sentence)
-        html = displacy.render(sent, style="dep")
-
-        st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
+        # sent = nlp(sentence)
+        # html = displacy.render(sent, style="dep")
+        #
+        # st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
+        spacy_streamlit.visualize([model], sentence)
 
 
 
