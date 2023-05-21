@@ -17,9 +17,9 @@ nlp = spacy.load("en_core_web_lg")
 def save_annotations(user, annotations):
     file_name = f"{user}_annotations.csv"
     annotations.to_csv(file_name, index=False,
-                       columns=["Sentence", "Tag according to dimension", "Creativity Scale",
-                                    "Notes on relevant dimension", "Notes",
-                                    ])
+                       columns=["Sentence", "Tag according to dimension",
+                                "Creativity Scale",
+                                "Notes on relevant dimension", "Notes"])
 
 
 # Define a function to load annotations
@@ -173,17 +173,24 @@ def main():
                                                     key=f"{user}_notes_relevant_dimension_{index}")
             user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
 
-            scale = st.selectbox("Scale (1-5)", options=[-1, 1, 2, 3, 4, 5],
-                                 key=f"{user}_scale_{index}", index = 0)
+            scale_key = f"{user}_scale_{index}"
+            if scale_key not in st.session_state:
+                st.session_state[scale_key] = row["Creativity Scale"]
+
+            scale = st.selectbox("Creativity Scale (1-5)",
+                                 options=[1, 2, 3, 4, 5],
+                                 key=scale_key,
+                                 index=st.session_state[scale_key])
+            st.session_state[scale_key] = scale
             user_annotations.at[index, "Creativity Scale"] = scale
 
             notes = st.text_area("Notes",
-                                 value=row["Notes"],
-                                 key=f"{user}_notes_{index}")
+                                     value=row["Notes"],
+                                     key=f"{user}_notes_{index}")
             user_annotations.at[index, "Notes"] = notes
 
             # Save user's annotations for each selection
-            save_annotations(user, user_annotations)
+        save_annotations(user, user_annotations)
 
         st.write("Changes saved automatically")
 
