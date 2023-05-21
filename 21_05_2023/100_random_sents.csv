@@ -1,4 +1,4 @@
-sentence,verb,dep set,doc index,sent index,index of verb
+Sentence,verb,dep set,doc index,sent index,index of verb
 "My horn on my car woke me up twice last nite, cuz apparently it shorted... and was going off insistently.",woke,advcl_prt_nsubj_dobj_acomp,13392,31,5
 wads it lyk 2 lyk or love sum1,lyk,nsubj_dobj_npadvmod,26802,16,2
 i will give it my all and not look back.,look,advmod_neg,8246,9,8
