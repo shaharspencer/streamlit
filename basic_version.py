@@ -1,4 +1,5 @@
 import os
+import pathlib
 import tempfile
 import urllib
 
@@ -72,27 +73,15 @@ def annotation_options_guide():
                     unsafe_allow_html=True)
 
         sent = nlp(sentence)
-        svg = displacy.render(sent, style="dep")
 
-        # Save the rendering as a temporary image file
-        with tempfile.NamedTemporaryFile(suffix=".png",
-                                         delete=False) as temp_file:
-            temp_file.write(svg.encode("utf-8"))
-            image_path = temp_file.name
+        # if rendering does not exist
+        file_name = f"verb_renderings/sentence_{index}.png"
+        if not os.path.exists(file_name):
+            svg = spacy.displacy.render(sent, style="dep")
+            output_path = pathlib.Path()
+            output_path.open('w', encoding="utf-8").write(svg)
 
-        # Generate a constant link to the rendering
-        rendering_url = generate_rendering_url(image_path)
-        st.markdown(f"[Rendered Dependency Parsing]({rendering_url})")
-
-def generate_rendering_url(image_path):
-    # Generate a constant link to the image
-    # Example: assuming the image is served from a static directory "renderings"
-    base_url = "https://example.com/renderings/"
-    filename = os.path.basename(image_path)
-    encoded_path = urllib.parse.quote(filename)
-    rendering_url = urllib.parse.urljoin(base_url, encoded_path)
-    return rendering_url
-
+        st.image(file_name)
 
 
 # Main app
