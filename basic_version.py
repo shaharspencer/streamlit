@@ -2,6 +2,7 @@ import os
 import pathlib
 import tempfile
 import urllib
+import cairosvg
 
 import streamlit as st
 import pandas as pd
@@ -78,10 +79,15 @@ def annotation_options_guide():
         file_name = os.path.join("21_05_2023/verb_renderings", "sentence_{index}.png")
         if not os.path.exists(file_name):
             svg = spacy.displacy.render(sent, style="dep")
-            output_path = pathlib.Path(file_name)
-            output_path.open('w', encoding="utf-8").write(svg)
+            svg_to_image(svg, file_name)
 
         st.image(file_name)
+
+def svg_to_image(svg, image_path):
+    # Convert SVG to image using an appropriate library (e.g., cairosvg, matplotlib, etc.)
+    # Save the image to the specified path
+    # Example using cairosvg:
+    cairosvg.svg2png(bytestring=svg, write_to=image_path)
 
 
 # Main app
