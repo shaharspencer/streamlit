@@ -173,15 +173,10 @@ def main():
                                                     key=f"{user}_notes_relevant_dimension_{index}")
             user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
 
-            scale_key = f"{user}_scale_{index}"
-            if scale_key not in st.session_state:
-                st.session_state[scale_key] = row["Creativity Scale"]
-
             scale = st.selectbox("Creativity Scale (1-5)",
                                  options=[1, 2, 3, 4, 5],
-                                 key=scale_key,
-                                 index=st.session_state[scale_key])
-            st.session_state[scale_key] = scale
+                                 key= f"{user}_creativity_scale_{index}"
+                                )
             user_annotations.at[index, "Creativity Scale"] = scale
 
             notes = st.text_area("Notes",
