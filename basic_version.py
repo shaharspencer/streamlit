@@ -54,8 +54,23 @@ def download_dataframe(dataframe):
 
 # Annotation Options Guide page
 def annotation_options_guide():
-    st.header("Annotation Options Guide")
-    # Add content for the Annotation Options Guide page
+    st.header("Annotation information")
+    for index, row in data.iterrows():
+        sentence = row["Sentence"]
+        doc = nlp(sentence)
+        # Render the token in bold
+        for token in doc:
+            if token.i == row["index of verb"]:
+                new_sentence = sentence.replace(token.text,
+                                                f"<b>{token.text}</b>")
+        sentence_number = index + 1
+        st.markdown(f"Sentence {sentence_number}: {new_sentence}",
+                    unsafe_allow_html=True)
+
+        sent = nlp(sentence)
+        svg = displacy.render(sent, style="dep")
+        st.write(svg, unsafe_allow_html=True)
+
 
 
 # Main app
@@ -105,11 +120,11 @@ def main():
             expand_button = st.button("Expand",
                                       key=f"{user}_expand_button_{index}")
             if expand_button:
-                # Toggle visibility of extra data and dependency tree for the current user only
+                # Toggle visibility of extra data
                 if f"{user}_expanded_{index}" not in st.session_state:
                     st.session_state[f"{user}_expanded_{index}"] = {
                         "extra_data": True,
-                        "dependency_tree": False
+
                     }
                 else:
                     st.session_state[f"{user}_expanded_{index}"]["extra_data"] = not \
