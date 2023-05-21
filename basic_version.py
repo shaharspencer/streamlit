@@ -9,6 +9,7 @@ import pandas as pd
 import base64
 import spacy
 from spacy import displacy
+HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
 
 # Load data from CSV file
@@ -73,16 +74,10 @@ def annotation_options_guide():
         st.markdown(f"Sentence {sentence_number}: {new_sentence}",
                     unsafe_allow_html=True)
 
-        sent = nlp(sentence)
+        sent = nlp(sentence, style="dep")
+        html = displacy.render(sent)
 
-        # if rendering does not exist
-        file_name = os.path.join("21_05_2023/verb_renderings", "sentence_{index}.jpg")
-        if not os.path.exists(file_name):
-            svg = spacy.displacy.render(sent, style="dep")
-            file_name.open('w', encoding="utf-8").write(svg)
-
-
-        st.image(file_name)
+        st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
 
 
 
