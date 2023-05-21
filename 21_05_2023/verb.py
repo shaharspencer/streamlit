@@ -54,7 +54,7 @@ def load_annotations(user):
 # Define a function to download the dataframe as a CSV file
 def download_dataframe(dataframe):
     csv = dataframe.to_csv(index=False,
-                           columns=["Sentence", "Tag according to dimension", "Creativity Scale"
+                           columns=["Sentence", "Tag according to dimension", "Creativity Scale",
                                     "Notes on relevant dimension", "Notes",
                                     ])
 
