@@ -135,7 +135,7 @@ def main():
             if f"{user}_expanded_{index}" in st.session_state and \
                     st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
                 # Display the dependency tree for the current sentence
-                sent = nlp(sentence)
+                sent = nlp(row["Sentence"])
                 svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
             tag_options = ["",
