@@ -100,7 +100,7 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             sentence = row["Sentence"]
-            doc = nlp(row["Sentence"])
+            doc = nlp(sentence)
             # Iterate over the tokens in the sentence
             for token in doc:
                 if token.i == row["index of verb"]:
@@ -153,7 +153,7 @@ def main():
             if f"{user}_expanded_{index}" in st.session_state and \
                     st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
                 # Display the dependency tree for the current sentence
-                sent = nlp(sentence)
+                sent = nlp(row["Sentence"])
                 svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
 
