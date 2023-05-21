@@ -13,7 +13,8 @@ HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; borde
 
 
 # Load data from CSV file
-data = pd.read_csv("21_05_2023/morph_order_by_entropy_and_verb_perc2023_05_21.csv")
+data = pd.read_csv("21_05_2023/morph_order_by_entropy_and_verb_perc2023_05_21.csv",
+                   encoding="ISO-8859-1")
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
