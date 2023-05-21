@@ -74,8 +74,8 @@ def annotation_options_guide():
         st.markdown(f"Sentence {sentence_number}: {new_sentence}",
                     unsafe_allow_html=True)
 
-        sent = nlp(sentence, style="dep")
-        html = displacy.render(sent)
+        sent = nlp(sentence)
+        html = displacy.render(sent, style="dep")
 
         st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
 
