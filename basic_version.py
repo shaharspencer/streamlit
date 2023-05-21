@@ -2,7 +2,6 @@ import os
 import pathlib
 import tempfile
 import urllib
-import spacy_streamlit
 
 
 import streamlit as st
@@ -75,11 +74,11 @@ def annotation_options_guide():
         st.markdown(f"Sentence {sentence_number}: {new_sentence}",
                     unsafe_allow_html=True)
 
-        # sent = nlp(sentence)
-        # html = displacy.render(sent, style="dep")
-        #
-        # st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
-        spacy_streamlit.visualize([model], sentence)
+        sent = nlp(sentence)
+        html = displacy.render(sent, style="dep")
+
+        st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
+
 
 
 
