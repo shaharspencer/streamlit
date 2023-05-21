@@ -100,7 +100,7 @@ def main():
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
             sentence = row["Sentence"]
-            doc = nlp(sentence)
+            doc = nlp(row["Sentence"])
             # Iterate over the tokens in the sentence
             for token in doc:
                 if token.i == row["index of verb"]:
