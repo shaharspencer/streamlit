@@ -137,7 +137,7 @@ def main():
                 sent = nlp(sentence)
                 svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
-            tag_options = [
+            tag_options = ["",
                 "ordinary",
                 "creative",
                 "spelling variant",
