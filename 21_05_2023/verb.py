@@ -25,21 +25,21 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Dimension score 1-5", "Notes"])
 
     if "Tag according to dimension" not in annotations.columns:
         annotations["Tag according to dimension"] = ""  # Set default annotation to ""
 
-    if "Notes on relevant dimension" not in annotations.columns:
-        annotations["Notes on relevant dimension"] = ""  # Add empty "Notes on relevant dimension" column if not present
+    if "Dimension score 1-5" not in annotations.columns:
+        annotations["Dimension score 1-5"] = ""  # Add empty "Dimension score 1-5" column if not present
 
     if "Notes" not in annotations.columns:
         annotations["Notes"] = ""  # Add empty "Notes" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Dimension score 1-5", "Notes"]],
                       on="Sentence", how="outer")
     merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
-    merged["Notes on relevant dimension"].fillna("", inplace=True)  # Set default notes to empty string
+    merged["Dimension score 1-5"].fillna("", inplace=True)  # Set default notes to empty string
     merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
@@ -53,7 +53,6 @@ def download_dataframe(dataframe):
     return href
 
 
-# Annotation Options Guide page
 
 
 
@@ -71,8 +70,7 @@ def main():
     user = st.sidebar.selectbox("Select User",
                                 ["Nurit", "Ittamar", "Gabi", "Shahar"])
 
-    # Annotation Options Guide page
-    st.sidebar.markdown("---")
+
 
     if not view_all_annotations:
         # Load user's annotations
@@ -113,10 +111,10 @@ def main():
             # Display extra data if expanded for the current user
             if f"{user}_expanded_{index}" in st.session_state and \
                     st.session_state[f"{user}_expanded_{index}"]["extra_data"]:
-                # Iterate over all columns except "Sentence", "Tag according to dimension", "Notes on relevant dimension", and "Notes"
+                # Iterate over all columns except "Sentence", "Tag according to dimension", "Dimension score 1-5", and "Notes"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
-                                      "Notes on relevant dimension", "Notes"]:
+                                      "Dimension score 1-5", "Notes"]:
                         st.write(f"{column}: {row[column]}")
 
             # Display dependency tree button
@@ -153,10 +151,10 @@ def main():
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
-            notes_relevant_dimension = st.text_area("Notes on relevant dimension",
-                                                    value=row["Notes on relevant dimension"],
-                                                    key=f"{user}_notes_relevant_dimension_{index}")
-            user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
+            notes_relevant_dimension = st.text_area("Dimension score 1-5",
+                                                    value=row["Dimension score 1-5"],
+                                                    key=f"{user}_dimension_score_1_5_{index}")
+            user_annotations.at[index, "Dimension score 1-5"] = notes_relevant_dimension
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
