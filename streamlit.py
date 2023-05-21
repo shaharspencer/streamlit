@@ -89,8 +89,15 @@ def main():
             if index >= 100:
                 break
             sentence = row["Sentence"]
+            doc = nlp(sentence)
+            # Iterate over the tokens in the sentence
+            for token in doc:
+                if token.i == row["index"]:
+                    # Render the token in bold
+                    sentence = sentence.replace(token.text,
+                                                f"<b>{token.text}</b>")
             sentence_number = index + 1
-            st.write(f"Sentence {sentence_number}: {sentence}")
+            st.markdown(f"Sentence {sentence_number}: {sentence}", unsafe_allow_html=True)
 
             # Display expand button under the sentence
             expand_button = st.button("Expand",
