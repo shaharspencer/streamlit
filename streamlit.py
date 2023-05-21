@@ -88,6 +88,7 @@ def main():
         for index, row in user_annotations.iterrows():
             if index >= 100:
                 break
+
             sentence = row["Sentence"]
             sentence_number = index + 1
             st.write(f"Sentence {sentence_number}: {sentence}")
@@ -145,7 +146,7 @@ def main():
                 "not a verb",
                 "algorithm error",
                 "not English"
-            ], key=f"{user}_tag_selectbox_{index}")
+            ], key=f"{user}_tag_selectbox_{index}", value=row["Tag according to dimension"])
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
