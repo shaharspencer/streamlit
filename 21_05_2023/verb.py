@@ -57,7 +57,7 @@ def load_annotations(user):
 
 # Define a function to download the dataframe as a CSV file
 def download_dataframe(dataframe):
-    csv = dataframe.to_csv(dataframe,index=False,
+    csv = dataframe.to_csv(index=False,
                            )
 
     b64 = base64.b64encode(csv.encode()).decode()
