@@ -16,7 +16,10 @@ nlp = spacy.load("en_core_web_lg")
 # Define a function to save annotations
 def save_annotations(user, annotations):
     file_name = f"{user}_annotations.csv"
-    annotations.to_csv(file_name, index=False)
+    annotations.to_csv(file_name, index=False,
+                       columns=["Sentence", "Tag according to dimension",
+                                "Notes on relevant dimension", "Notes",
+                                "Creativity Scale"])
 
 
 # Define a function to load annotations
@@ -36,6 +39,9 @@ def load_annotations(user):
     if "Notes" not in annotations.columns:
         annotations["Notes"] = ""  # Add empty "Notes" column if not present
 
+    if "Creativity Scale" not in annotations.columns:
+        annotations["Creativity Scale"] = ""  # Add empty "Scale" column if not present
+
     merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"]],
                       on="Sentence", how="outer")
     merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
@@ -47,7 +53,11 @@ def load_annotations(user):
 
 # Define a function to download the dataframe as a CSV file
 def download_dataframe(dataframe):
-    csv = dataframe.to_csv(index=False)
+    csv = dataframe.to_csv(index=False,
+                           columns=["Sentence", "Tag according to dimension", "Creativity Scale"
+                                    "Notes on relevant dimension", "Notes",
+                                    ])
+
     b64 = base64.b64encode(csv.encode()).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="user_annotations.csv">Download CSV</a>'
     return href
@@ -159,6 +169,10 @@ def main():
                                                     value=row["Notes on relevant dimension"],
                                                     key=f"{user}_notes_relevant_dimension_{index}")
             user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
+
+            scale = st.selectbox("Scale (1-5)", options=[-1, 1, 2, 3, 4, 5],
+                                 key=f"{user}_scale_{index}", index = 0)
+            user_annotations.at[index, "Scale"] = scale
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
