@@ -137,8 +137,7 @@ def main():
                 sent = nlp(sentence)
                 svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
-
-            annotation = st.selectbox("Tag according to dimension", options=[
+            tag_options = [
                 "ordinary",
                 "creative",
                 "spelling variant",
@@ -146,7 +145,8 @@ def main():
                 "not a verb",
                 "algorithm error",
                 "not English"
-            ], key=f"{user}_tag_selectbox_{index}", value=row["Tag according to dimension"])
+            ]
+            annotation = st.selectbox("Tag according to dimension", options= tag_options, key=f"{user}_tag_selectbox_{index}", index=tag_options.index(row["Tag according to dimension"]))
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
