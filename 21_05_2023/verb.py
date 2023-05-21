@@ -17,9 +17,9 @@ nlp = spacy.load("en_core_web_lg")
 def save_annotations(user, annotations):
     file_name = f"{user}_annotations.csv"
     annotations.to_csv(file_name, index=False,
-                       columns=["Sentence", "Tag according to dimension",
-                                "Notes on relevant dimension", "Notes",
-                                "Creativity Scale"])
+                       columns=["Sentence", "Tag according to dimension", "Creativity Scale",
+                                    "Notes on relevant dimension", "Notes",
+                                    ])
 
 
 # Define a function to load annotations
@@ -28,7 +28,9 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Creativity Scale",
+                                    "Notes on relevant dimension", "Notes",
+                                    ])
 
     if "Tag according to dimension" not in annotations.columns:
         annotations["Tag according to dimension"] = ""  # Set default annotation to ""
@@ -42,7 +44,9 @@ def load_annotations(user):
     if "Creativity Scale" not in annotations.columns:
         annotations["Creativity Scale"] = ""  # Add empty "Scale" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Creativity Scale",
+                                    "Notes on relevant dimension", "Notes",
+                                    ]],
                       on="Sentence", how="outer")
     merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
     merged["Notes on relevant dimension"].fillna("", inplace=True)  # Set default notes to empty string
@@ -127,8 +131,9 @@ def main():
                     st.session_state[f"{user}_expanded_{index}"]["extra_data"]:
                 # Iterate over all columns except "Sentence", "Tag according to dimension", "Notes on relevant dimension", and "Notes"
                 for column in data.columns:
-                    if column not in ["Sentence", "Tag according to dimension",
-                                      "Notes on relevant dimension", "Notes"]:
+                    if column not in ["Sentence", "Tag according to dimension", "Creativity Scale",
+                                    "Notes on relevant dimension", "Notes",
+                                    ]:
                         st.write(f"{column}: {row[column]}")
 
             # Display dependency tree button
