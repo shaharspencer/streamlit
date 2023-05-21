@@ -124,27 +124,7 @@ def main():
                                       "Notes on relevant dimension", "Notes"]:
                         st.write(f"{column}: {row[column]}")
 
-            # Display dependency tree button
-            dependency_tree_button = st.button("Show Dependency Tree",
-                                               key=f"{user}_dependency_tree_button_{index}")
-            if dependency_tree_button:
-                # Toggle visibility of the dependency tree for the current user only
-                if f"{user}_expanded_{index}" not in st.session_state:
-                    st.session_state[f"{user}_expanded_{index}"] = {
-                        "extra_data": False,
-                        "dependency_tree": True
-                    }
-                else:
-                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"] = not \
-                        st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]
 
-            # Display dependency tree if expanded for the current user
-            if f"{user}_expanded_{index}" in st.session_state and \
-                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
-                # Display the dependency tree for the current sentence
-                sent = nlp(sentence)
-                svg = displacy.render(sent, style="dep")
-                st.write(svg, unsafe_allow_html=True)
             tag_options = ["",
                 "ordinary",
                 "creative",
