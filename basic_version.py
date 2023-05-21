@@ -78,7 +78,7 @@ def annotation_options_guide():
         file_name = f"verb_renderings/sentence_{index}.png"
         if not os.path.exists(file_name):
             svg = spacy.displacy.render(sent, style="dep")
-            output_path = pathlib.Path()
+            output_path = pathlib.Path(file_name)
             output_path.open('w', encoding="utf-8").write(svg)
 
         st.image(file_name)
