@@ -1,5 +1,3 @@
-import copy
-
 import streamlit as st
 import pandas as pd
 import base64
@@ -8,7 +6,7 @@ from spacy import displacy
 
 
 # Load data from CSV file
-data = pd.read_csv(r"21_05_2023/dep_struct_rarest_sents_by_entropy_2023_05_21.csv",
+data = pd.read_csv(r"21_05_2023//morph_order_by_entropy_and_verb_perc2023_05_21.csv",
                    encoding="ISO-8859-1")
 
 # Load spaCy model
@@ -107,10 +105,9 @@ def main():
             for token in doc:
                 if token.i == row["index of verb"]:
                     # Render the token in bold
-                    new_sentence = copy.copy(sentence)
+                    new_sentence = row["Sentence"]
                     new_sentence = new_sentence.replace(token.text,
                                                 f"<b>{token.text}</b>")
-                    break
             sentence_number = index + 1
             st.markdown(f"Sentence {sentence_number}: {new_sentence}", unsafe_allow_html=True)
 
@@ -156,7 +153,7 @@ def main():
             if f"{user}_expanded_{index}" in st.session_state and \
                     st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
                 # Display the dependency tree for the current sentence
-                sent = nlp(row["Sentence"])
+                sent = nlp(sentence)
                 svg = displacy.render(sent, style="dep")
                 st.write(svg, unsafe_allow_html=True)
 
