@@ -57,10 +57,8 @@ def load_annotations(user):
 
 # Define a function to download the dataframe as a CSV file
 def download_dataframe(dataframe):
-    csv = dataframe.to_csv(index=False,
-                           columns=["Sentence", "Tag according to dimension", "Creativity Scale",
-                                    "Notes on relevant dimension", "Notes",
-                                    ])
+    csv = dataframe.to_csv(dataframe,index=False,
+                           )
 
     b64 = base64.b64encode(csv.encode()).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="user_annotations.csv">Download CSV</a>'
