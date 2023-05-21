@@ -53,10 +53,7 @@ def download_dataframe(dataframe):
     return href
 
 
-# Annotation Options Guide page
-def annotation_options_guide():
-    st.header("Annotation Options Guide")
-    # Add content for the Annotation Options Guide page
+
 
 
 # Main app
@@ -73,12 +70,7 @@ def main():
     user = st.sidebar.selectbox("Select User",
                                 ["Nurit", "Ittamar", "Gabi", "Shahar"])
 
-    # Annotation Options Guide page
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("**Annotation Options Guide**")
-    if st.sidebar.button("Go to Annotation Options Guide"):
-        # Render the Annotation Options Guide page
-        annotation_options_guide()
+
 
     if not view_all_annotations:
         # Load user's annotations
