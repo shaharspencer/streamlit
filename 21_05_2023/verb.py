@@ -172,7 +172,7 @@ def main():
 
             scale = st.selectbox("Scale (1-5)", options=[-1, 1, 2, 3, 4, 5],
                                  key=f"{user}_scale_{index}", index = 0)
-            user_annotations.at[index, "Scale"] = scale
+            user_annotations.at[index, "Creativity Scale"] = scale
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
