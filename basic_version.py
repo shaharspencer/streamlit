@@ -1,3 +1,7 @@
+import os
+import tempfile
+import urllib
+
 import streamlit as st
 import pandas as pd
 import base64
@@ -69,7 +73,25 @@ def annotation_options_guide():
 
         sent = nlp(sentence)
         svg = displacy.render(sent, style="dep")
-        st.write(svg, unsafe_allow_html=True)
+
+        # Save the rendering as a temporary image file
+        with tempfile.NamedTemporaryFile(suffix=".png",
+                                         delete=False) as temp_file:
+            temp_file.write(svg.encode("utf-8"))
+            image_path = temp_file.name
+
+        # Generate a constant link to the rendering
+        rendering_url = generate_rendering_url(image_path)
+        st.markdown(f"[Rendered Dependency Parsing]({rendering_url})")
+
+def generate_rendering_url(image_path):
+    # Generate a constant link to the image
+    # Example: assuming the image is served from a static directory "renderings"
+    base_url = "https://example.com/renderings/"
+    filename = os.path.basename(image_path)
+    encoded_path = urllib.parse.quote(filename)
+    rendering_url = urllib.parse.urljoin(base_url, encoded_path)
+    return rendering_url
 
 
 
