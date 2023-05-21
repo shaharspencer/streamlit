@@ -6,7 +6,7 @@ from spacy import displacy
 
 
 # Load data from CSV file
-data = pd.read_csv(r"21_05_2023\morph_order_by_entropy_and_verb_perc2023_05_21.csv",
+data = pd.read_csv(r"21_05_2023/morph_order_by_entropy_and_verb_perc2023_05_21.csv",
                    encoding="ISO-8859-1")
 
 # Load spaCy model
