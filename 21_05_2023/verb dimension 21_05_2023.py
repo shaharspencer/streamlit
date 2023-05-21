@@ -86,8 +86,6 @@ def main():
         # Display user's annotations
         st.header(f"{user}'s Annotations")
         for index, row in user_annotations.iterrows():
-            if index >= 100:
-                break
             sentence = row["Sentence"]
             doc = nlp(sentence)
             # Iterate over the tokens in the sentence
