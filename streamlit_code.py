@@ -1,20 +1,13 @@
-import os
-import pathlib
-import tempfile
-import urllib
-
-
-import streamlit as st
+import streamlit_code as st
 import pandas as pd
 import base64
 import spacy
 from spacy import displacy
-HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
 
 # Load data from CSV file
-data = pd.read_csv("your_dataframe.csv", encoding="ISO-8859-1")
-model = "en_core_web_lg"
+data = pd.read_csv("iteration_one/your_dataframe.csv")
+
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
 
@@ -31,21 +24,21 @@ def load_annotations(user):
     try:
         annotations = pd.read_csv(file_name)
     except FileNotFoundError:
-        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Creativity Score (1-5)", "Notes"])
+        annotations = pd.DataFrame(columns=["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"])
 
     if "Tag according to dimension" not in annotations.columns:
         annotations["Tag according to dimension"] = ""  # Set default annotation to ""
 
-    if "Creativity Score (1-5)" not in annotations.columns:
-        annotations["Creativity Score (1-5)"] = ""  # Add empty "Notes on relevant dimension" column if not present
+    if "Notes on relevant dimension" not in annotations.columns:
+        annotations["Notes on relevant dimension"] = ""  # Add empty "Notes on relevant dimension" column if not present
 
     if "Notes" not in annotations.columns:
         annotations["Notes"] = ""  # Add empty "Notes" column if not present
 
-    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Creativity Score (1-5)", "Notes"]],
+    merged = pd.merge(data, annotations[["Sentence", "Tag according to dimension", "Notes on relevant dimension", "Notes"]],
                       on="Sentence", how="outer")
     merged["Tag according to dimension"].fillna("", inplace=True)  # Set default annotation to ""
-    merged["Creativity Score (1-5)"].fillna("", inplace=True)  # Set default notes to empty string
+    merged["Notes on relevant dimension"].fillna("", inplace=True)  # Set default notes to empty string
     merged["Notes"].fillna("", inplace=True)  # Set default notes to empty string
     merged.drop_duplicates(inplace=True)  # Remove duplicate columns
     return merged
@@ -61,25 +54,8 @@ def download_dataframe(dataframe):
 
 # Annotation Options Guide page
 def annotation_options_guide():
-    st.header("Annotation information")
-    for index, row in data.iterrows():
-        sentence = row["Sentence"]
-        doc = nlp(sentence)
-        # Render the token in bold
-        for token in doc:
-            if token.i == row["index of verb"]:
-                new_sentence = sentence.replace(token.text,
-                                                f"<b>{token.text}</b>")
-        sentence_number = index + 1
-        st.markdown(f"Sentence {sentence_number}: {new_sentence}",
-                    unsafe_allow_html=True)
-
-        sent = nlp(sentence)
-        html = displacy.render(sent, style="dep")
-
-        st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
-
-
+    st.header("Annotation Options Guide")
+    # Add content for the Annotation Options Guide page
 
 
 # Main app
@@ -129,11 +105,11 @@ def main():
             expand_button = st.button("Expand",
                                       key=f"{user}_expand_button_{index}")
             if expand_button:
-                # Toggle visibility of extra data
+                # Toggle visibility of extra data and dependency tree for the current user only
                 if f"{user}_expanded_{index}" not in st.session_state:
                     st.session_state[f"{user}_expanded_{index}"] = {
                         "extra_data": True,
-
+                        "dependency_tree": False
                     }
                 else:
                     st.session_state[f"{user}_expanded_{index}"]["extra_data"] = not \
@@ -145,10 +121,30 @@ def main():
                 # Iterate over all columns except "Sentence", "Tag according to dimension", "Notes on relevant dimension", and "Notes"
                 for column in data.columns:
                     if column not in ["Sentence", "Tag according to dimension",
-                                      "Creativity Score (1-5)", "Notes"]:
+                                      "Notes on relevant dimension", "Notes"]:
                         st.write(f"{column}: {row[column]}")
 
+            # Display dependency tree button
+            dependency_tree_button = st.button("Show Dependency Tree",
+                                               key=f"{user}_dependency_tree_button_{index}")
+            if dependency_tree_button:
+                # Toggle visibility of the dependency tree for the current user only
+                if f"{user}_expanded_{index}" not in st.session_state:
+                    st.session_state[f"{user}_expanded_{index}"] = {
+                        "extra_data": False,
+                        "dependency_tree": True
+                    }
+                else:
+                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"] = not \
+                        st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]
 
+            # Display dependency tree if expanded for the current user
+            if f"{user}_expanded_{index}" in st.session_state and \
+                    st.session_state[f"{user}_expanded_{index}"]["dependency_tree"]:
+                # Display the dependency tree for the current sentence
+                sent = nlp(sentence)
+                svg = displacy.render(sent, style="dep")
+                st.write(svg, unsafe_allow_html=True)
             tag_options = ["",
                 "ordinary",
                 "creative",
@@ -162,10 +158,10 @@ def main():
             user_annotations.at[
                 index, "Tag according to dimension"] = annotation
 
-            notes_relevant_dimension = st.text_area("Creativity Score (1-5)",
-                                                    value=row["Creativity Score (1-5)"],
+            notes_relevant_dimension = st.text_area("Notes on relevant dimension",
+                                                    value=row["Notes on relevant dimension"],
                                                     key=f"{user}_notes_relevant_dimension_{index}")
-            user_annotations.at[index, "Creativity Score (1-5)"] = notes_relevant_dimension
+            user_annotations.at[index, "Notes on relevant dimension"] = notes_relevant_dimension
 
             notes = st.text_area("Notes",
                                  value=row["Notes"],
